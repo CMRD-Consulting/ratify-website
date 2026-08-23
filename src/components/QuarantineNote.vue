@@ -11,14 +11,16 @@ import { NOTARIZED, QUARANTINE_COMMAND } from "../site.js";
  * saved a paragraph and spent their afternoon.
  *
  * Renders nothing once NOTARIZED flips — there is no version of this worth
- * keeping as reassurance.
+ * keeping as reassurance. The margin lives on the root rather than on a
+ * wrapper, so nothing is left behind holding space when that happens.
  */
 </script>
 
 <template>
   <div
     v-if="!NOTARIZED"
-    class="mx-auto max-w-md rounded-[10px] border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-left"
+    class="mx-auto mt-8 w-full min-w-0 max-w-md rounded-[10px] border border-white/[0.08]
+           bg-white/[0.02] px-4 py-3 text-left"
   >
     <p class="text-[12px] leading-relaxed text-[var(--color-zinc-400)]">
       <strong class="font-semibold text-[var(--color-zinc-200)]"
@@ -28,8 +30,15 @@ import { NOTARIZED, QUARANTINE_COMMAND } from "../site.js";
       them. Ratify is one of those today, so run this once after installing:
     </p>
 
+    <!--
+      This one wraps rather than scrolls. It is a command someone has to run,
+      and a line that scrolls sideways on a phone hides the half of it that
+      matters — the path — behind a gesture there is no affordance for. Wrapped
+      at the space before the path, both halves stay on screen.
+    -->
     <code
-      class="mt-2.5 block overflow-x-auto whitespace-nowrap font-mono text-[11px] text-[var(--color-zinc-100)]"
+      class="mt-2.5 block min-w-0 whitespace-pre-wrap break-words font-mono text-[11px]
+             leading-relaxed text-[var(--color-zinc-100)]"
       >{{ QUARANTINE_COMMAND }}</code
     >
 

@@ -8,8 +8,12 @@ import { REQUIREMENTS } from "../../site.js";
 
 <template>
   <Section id="top" class="!pt-32 md:!pt-40">
+    <!-- min-w-0 on both columns: a grid item defaults to min-width:auto, so it
+         refuses to shrink below its own min-content and overflows the track
+         rather than compressing. Every min-w-0 further down is inert without
+         this one, because nothing below is ever asked to fit. -->
     <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-      <div>
+      <div class="min-w-0">
         <p class="eyebrow">A macOS review inbox</p>
 
         <h1 class="display mt-5">Approve pull requests in three keystrokes.</h1>
@@ -37,7 +41,7 @@ import { REQUIREMENTS } from "../../site.js";
         </p>
       </div>
 
-      <FastPath class="lg:mt-2" />
+      <FastPath class="min-w-0 lg:mt-2" />
     </div>
 
     <div class="mt-16 md:mt-20" v-reveal>

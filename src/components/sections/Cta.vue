@@ -65,9 +65,7 @@ import { RELEASES_URL, TAP_URL, REQUIREMENTS } from "../../site.js";
         <AppStoreButton variant="quiet" />
       </div>
 
-      <div class="mt-8 flex justify-center">
-        <QuarantineNote />
-      </div>
+      <QuarantineNote />
 
       <p class="mt-6 font-mono text-[11px] text-zinc-600">
         {{ REQUIREMENTS }}

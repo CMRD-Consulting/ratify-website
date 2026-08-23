@@ -1,0 +1,48 @@
+# Netlify build for ratify.cmrd.dev.
+#
+# Static output, no functions, no environment variables — a clean clone plus
+# `npm ci && npm run build` is the whole deploy.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Match .nvmrc. Netlify reads .nvmrc too, but pinning it here means the
+  # version is visible in the build log rather than inferred.
+  NODE_VERSION = "22.12.0"
+
+# One page, no client-side router: everything that is not a real file is a 404,
+# which is what we want — a catch-all rewrite to index.html would serve the
+# landing page under invented URLs and let them get indexed.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # The page loads its own JS/CSS, its own images, and Google Fonts. Nothing
+    # else — no analytics, no third-party embeds, no XHR of any kind.
+    #
+    # style-src needs 'unsafe-inline' because Vue writes real style attributes:
+    # the mark is sized by height (Wordmark), the top bar reads a layout token
+    # (SiteHeader), the CTA carries its own radial, and v-reveal sets a
+    # transition-delay per element. There is no user input anywhere on this
+    # page, so inline styles are not an injection surface here — but if that
+    # ever changes, move those four to classes and drop this back.
+    Content-Security-Policy = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+
+# Vite fingerprints everything under /assets, so it can be cached forever.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Screenshots are not fingerprinted — they keep stable names so the markup
+# stays readable. A day is long enough to be useful and short enough that a
+# re-captured screenshot lands without a purge.
+[[headers]]
+  for = "/shots/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

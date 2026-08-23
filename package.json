@@ -1,0 +1,25 @@
+{
+  "name": "ratify-website",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Marketing site for Ratify — a keyboard-driven macOS pull request review inbox. ratify.cmrd.dev",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "shots": "./scripts/shots.sh",
+    "sync-tokens": "node scripts/sync-tokens.mjs",
+    "shoot": "node scripts/shoot.mjs"
+  },
+  "dependencies": {
+    "vue": "^3.5.32"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "playwright-core": "^1.62.1",
+    "tailwindcss": "^4.2.2",
+    "vite": "^8.0.7"
+  }
+}

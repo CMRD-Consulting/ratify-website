@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.DS_Store
+
+# Local editor/agent config
+.claude/
+
+# 2x capture sources from `npm run shoot`; only the re-encoded
+# WebP beside them is shipped and committed.
+public/shots/src/

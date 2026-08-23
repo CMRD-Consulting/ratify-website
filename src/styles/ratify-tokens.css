@@ -1,0 +1,151 @@
+/* ─────────────────────────────────────────────────────────────────────────
+ * Ratify — Nocturne tokens.  VENDORED: do not edit here.
+ *
+ *   source: CMRD-Consulting/Ratify · src/assets/ratify-tokens.css
+ *   copied: 2026-08-23
+ *
+ * The site used to import this straight out of the app checkout next door.
+ * That stopped working when the site became its own repository, and vendoring
+ * beats a submodule here: the app repo is private, so a submodule would make
+ * this repo unclonable by anyone who cannot read the app.
+ *
+ * Every value is taken from the design canvas, not re-picked. Two rules the
+ * whole palette depends on:
+ *   1. Indigo is chrome — selection, focus, progress, the mark, links, filled
+ *      chrome buttons. It never appears on a review control.
+ *   2. Mint is a verdict — approve, passing checks, added lines. It never
+ *      appears as chrome.
+ *
+ * Regenerate with:  npm run sync-tokens
+ *
+ * Site-only rules belong in site.css, never here — anything added below is
+ * lost on the next sync.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* ── Type ─────────────────────────────────────────────────────────────
+   * Brand is the wordmark ONLY (sign-in, About, DMG, marketing).
+   * Never use it for UI text or headings. */
+  --font-brand: "Hanken Grotesk", system-ui, sans-serif;
+  --font-sans: "Instrument Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Sans carries anything a person wrote; mono anything a machine made
+   * (identifiers, counts, keys, branches, paths, SHAs). The split is strict —
+   * a queue row mixes both so you can see which parts are facts. */
+  --text-title: 1.1875rem;   /* 19px / 600 — PR title */
+  --text-body: 0.8125rem;    /* 13px — body, the floor */
+  --text-secondary: 0.75rem; /* 12px */
+  --text-meta: 0.6875rem;    /* 11px — absolute floor */
+  --text-diff: 0.75rem;      /* 12px mono, line-height 20px */
+  --tracking-ui: -0.011em;
+  --tracking-brand: -0.035em;
+
+  /* ── Canvas & surfaces ────────────────────────────────────────────── */
+  --color-canvas: #09090B;              /* zinc-950 */
+  --color-panel: rgb(24 24 27 / 0.65);  /* translucent zinc-900 */
+  --color-chrome: rgb(12 13 15 / 0.8);  /* top bar, bottom rail — with blur(16px) */
+  --color-hairline: rgb(255 255 255 / 0.06);
+  --color-hairline-strong: rgb(255 255 255 / 0.12);
+  --color-inset-highlight: rgb(255 255 255 / 0.06);
+
+  /* Row states. Selection is fill + spine; focus is a ring, never a fill. */
+  --color-row-hover: rgb(255 255 255 / 0.028);
+  --color-row-selected: rgb(255 255 255 / 0.055);
+  --color-row-selected-blur: rgb(255 255 255 / 0.04); /* focus elsewhere */
+
+  /* ── Brand · indigo ───────────────────────────────────────────────────
+   * Matches Tailwind's indigo exactly; aliased so intent is readable. */
+  --color-brand: #818CF8;         /* indigo-400 — mark, links, focus, spine */
+  --color-brand-hover: #A5B4FC;   /* indigo-300 */
+  --color-brand-fill: #6366F1;    /* indigo-500 — filled chrome buttons */
+  --color-brand-pressed: #4F46E5; /* indigo-600 — and the mark on light */
+  --color-brand-wash: #1E1B4B;    /* indigo-950 — canvas wash */
+
+  /* ── Review semantics ─────────────────────────────────────────────────
+   * Never colour alone: each owns a glyph that is never dropped.
+   *   approve ✓   changes ↺   danger ✕   pending ○   since ⤣            */
+  --color-approve: #34D399;
+  --color-approve-fg: #022C22;  /* text on a filled approve button */
+  --color-approve-dim: #6EE7B7;
+  --color-changes: #F5B13D;     /* also means "unsent" — pending comments */
+  --color-danger: #FF5C4D;
+  --color-pending: #A1A1AA;
+  --color-since: #22D3EE;       /* "since my review" only. Never a verdict. */
+
+  /* ── Diff ─────────────────────────────────────────────────────────────
+   * Flat rgba only. No backdrop-filter, shadow or gradient on a diff row,
+   * manifest row or queue row — they tank scroll performance. */
+  --color-diff-add-bg: rgb(52 211 153 / 0.09);
+  --color-diff-add-gutter: rgb(52 211 153 / 0.22);
+  --color-diff-add-num: rgb(52 211 153 / 0.10);
+  --color-diff-add-count: #4E8F73;
+  --color-diff-del-bg: rgb(255 92 77 / 0.09);
+  --color-diff-del-gutter: rgb(255 92 77 / 0.22);
+  --color-diff-del-num: rgb(255 92 77 / 0.10);
+  --color-diff-del-count: #8F5148;
+  --color-diff-hunk: rgb(255 255 255 / 0.035);
+  --color-diff-line-selected: rgb(255 255 255 / 0.05);
+
+  /* ── Code tokens ──────────────────────────────────────────────────────
+   * Desaturated on purpose, so syntax never competes with the semantics
+   * above. Feed these to Shiki as a custom theme. */
+  --color-code-keyword: #9F8CD6;
+  --color-code-fn: #7FA6D8;
+  --color-code-string: #C9A66B;
+  --color-code-ident: #D4D4D8;
+  --color-code-punct: #71717A;
+  --color-code-comment: #5F6470;
+
+  /* ── Radii ────────────────────────────────────────────────────────── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* ── Layout constants ───────────────────────────────────────────────────
+ * Two panes. The header strip is one component that renders inline below
+ * 1560px and as a right rail above it — a breakpoint, not a fork. */
+:root {
+  --ratify-topbar-h: 56px;   /* raised from the kit's 44px on request */
+  --ratify-rail-h: 30px;        /* bottom key-hint rail */
+  --ratify-titlebar-pad: 72px;  /* reserved for the traffic lights */
+  --ratify-queue-w: 336px;      /* 280px at ≤900px wide */
+  --ratify-queue-collapsed-w: 56px;
+  --ratify-row-h: 58px;         /* fixed — j/k travel must be constant */
+  --ratify-manifest-w: 288px;   /* 40px glyph gutter at ≤900px wide */
+  --ratify-diff-line-h: 20px;
+  --ratify-thread-gutter-w: 26px;
+  --ratify-rail-breakpoint: 1560px;
+}
+
+/* Canvas wash. The only gradients in the app live on chrome and overlays. */
+body {
+  background-color: var(--color-canvas);
+  background-image:
+    radial-gradient(680px 420px at 6% -8%, rgb(99 102 241 / 0.13), transparent 70%),
+    radial-gradient(560px 360px at 96% -6%, rgb(255 255 255 / 0.055), transparent 70%);
+  color: theme(--color-zinc-200);
+  font-family: var(--font-sans);
+  letter-spacing: var(--tracking-ui);
+}
+
+/* Links are chrome, so they are indigo. Define these even before the app has
+ * links — undefined anchors render browser-default blue. */
+a { color: var(--color-brand); text-decoration: none; }
+a:hover { color: var(--color-brand-hover); }
+
+/* Every interactive element gets a ring that survives the dark canvas.
+ * A ring, never a fill — a fill means "selected", which is a different thing. */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px rgb(129 140 248 / 0.65), 0 0 0 3px rgb(129 140 248 / 0.16);
+}
+
+::selection { background: rgb(99 102 241 / 0.3); }
+
+/* Fast and functional. Nothing over 200ms. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

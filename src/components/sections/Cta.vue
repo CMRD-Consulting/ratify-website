@@ -1,8 +1,10 @@
 <script setup>
 import Section from "../Section.vue";
+import BrewInstall from "../BrewInstall.vue";
 import AppStoreButton from "../AppStoreButton.vue";
+import QuarantineNote from "../QuarantineNote.vue";
 import Kbd from "../Kbd.vue";
-import { REQUIREMENTS } from "../../site.js";
+import { RELEASES_URL, TAP_URL, REQUIREMENTS } from "../../site.js";
 </script>
 
 <template>
@@ -29,10 +31,45 @@ import { REQUIREMENTS } from "../../site.js";
       </p>
 
       <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
-        <AppStoreButton />
+        <BrewInstall />
       </div>
 
-      <p class="mt-4 font-mono text-[11px] text-zinc-600">
+      <!-- No `brew tap` line above this one, and that is not an omission.
+           Homebrew 6 refuses casks from a tap it has not been told to trust,
+           and `brew install` records that trust only for a fully-qualified
+           name — so the two-step version of this is not longer, it is broken.
+           The command above is the one that works. -->
+      <p class="mt-4 text-[12px] text-[var(--color-zinc-500)]">
+        Adds and trusts the
+        <a :href="TAP_URL" target="_blank" rel="noreferrer" class="link"
+          >cmrd-consulting tap</a
+        >
+        on first install. After that,
+        <code class="font-mono text-[11px] text-[var(--color-zinc-300)]"
+          >brew upgrade --cask ratify</code
+        >
+      </p>
+
+      <!-- items-stretch, not items-center: the App Store badge is two lines of
+           text and comes out 50px, the DMG button one line and 45.5px. Letting
+           the shorter one stretch keeps them level without either hardcoding a
+           height the badge would outgrow. -->
+      <div class="mt-8 flex flex-wrap items-stretch justify-center gap-3">
+        <a
+          :href="RELEASES_URL"
+          target="_blank"
+          rel="noreferrer"
+          class="btn-neutral !h-auto !rounded-[10px] px-4 py-3"
+          >Download the DMG</a
+        >
+        <AppStoreButton variant="quiet" />
+      </div>
+
+      <div class="mt-8 flex justify-center">
+        <QuarantineNote />
+      </div>
+
+      <p class="mt-6 font-mono text-[11px] text-zinc-600">
         {{ REQUIREMENTS }}
       </p>
     </div>

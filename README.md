@@ -136,8 +136,27 @@ requires no change here.**
 
 [`netlify.toml`](netlify.toml) carries the whole deploy: `npm run build`,
 publish `dist`, Node pinned to match `.nvmrc`, plus cache and security headers.
-Connect the repo in Netlify and point `ratify.cmrd.dev` at it — there are no
-environment variables and no build secrets.
+There are no environment variables and no build secrets.
+
+**Merging to `main` deploys.** The site is connected to this repository through
+the Netlify GitHub App, so a merge builds and publishes to `ratify.cmrd.dev`
+with nothing to run by hand. Pull requests get a deploy preview; no other
+branch builds, because `allowed_branches` is `main` alone.
+
+Nothing here needs touching when the app releases: the download links resolve
+through `/releases/latest`, so a new DMG is live on the site the moment its
+release is published.
+
+Deploying by hand is still possible and is occasionally the right thing —
+rolling back, or shipping while GitHub is down:
+
+```bash
+npm run build
+netlify deploy --prod --dir=dist
+```
+
+Prefer a merge. A manual deploy publishes whatever is in `dist` at that moment,
+which is not necessarily what is on `main`.
 
 There is deliberately **no catch-all rewrite to `index.html`**. This is one page
 with no client-side router, so anything that is not a real file should 404

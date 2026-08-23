@@ -2,7 +2,7 @@
 import Section from "../Section.vue";
 import Shot from "../Shot.vue";
 import FastPath from "../FastPath.vue";
-import AppStoreButton from "../AppStoreButton.vue";
+import BrewInstall from "../BrewInstall.vue";
 import { REQUIREMENTS } from "../../site.js";
 </script>
 
@@ -20,15 +20,20 @@ import { REQUIREMENTS } from "../../site.js";
           and every review action one keystroke away.
         </p>
 
+        <!-- The install line is the hero's call to action, and it is a
+             command rather than a button because that is genuinely how this
+             ships. The other channels live in #get, where someone who did not
+             want a terminal has already scrolled past the argument for one. -->
         <div class="mt-8 flex flex-wrap items-center gap-3">
-          <AppStoreButton />
+          <BrewInstall />
           <a href="#inbox" class="btn-neutral !h-auto !rounded-[10px] px-4 py-3"
             >See how it works</a
           >
         </div>
 
         <p class="mt-4 font-mono text-[11px] text-zinc-600">
-          {{ REQUIREMENTS }}
+          {{ REQUIREMENTS }} ·
+          <a href="#get" class="link">other ways to install</a>
         </p>
       </div>
 

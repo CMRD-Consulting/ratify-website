@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import Wordmark from "./Wordmark.vue";
-import AppStoreButton from "./AppStoreButton.vue";
 
 /**
  * The top bar, borrowing the app's own chrome: 56px tall, translucent
@@ -51,8 +50,13 @@ const nav = [
         >
       </nav>
 
+      <!-- The install command does not fit a 56px bar and a badge for a store
+           Ratify is not in yet would be worse than nothing, so the persistent
+           call to action is a jump to the section that holds both. -->
       <div class="ml-auto flex items-center gap-3">
-        <AppStoreButton variant="quiet" class="!py-1.5 scale-[0.92] origin-right" />
+        <a href="#get" class="btn-chrome !h-8 !rounded-[8px] !px-3.5 !text-[13px]"
+          >Install</a
+        >
       </div>
     </div>
   </header>

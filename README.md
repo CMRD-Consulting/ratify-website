@@ -28,8 +28,9 @@ app ships. Nothing here re-picks a colour.
 
 Two rules carry over unchanged, and they are why the page looks the way it does:
 
-- **Indigo is chrome** — links, focus, the mark, filled buttons. The App Store
-  button is chrome, so it is indigo.
+- **Indigo is chrome** — links, focus, the mark, filled buttons. The install
+  command's Copy button and the App Store button are both chrome, so both are
+  indigo.
 - **Mint is a verdict** — approve, passing checks, added lines. On this page
   mint is spent only where the copy is literally about approving: the `a`
   keycap and the verdict-key row. Nowhere else.
@@ -95,12 +96,41 @@ The header is regenerated and the app's file is taken verbatim below it, so the
 vendored copy is a pure function of the source. **Changing the palette in the
 app means running this** — nothing warns you otherwise.
 
-## Before release
+## How Ratify ships, and what the page has to say about it
 
-Everything about availability lives in [`src/site.js`](src/site.js).
-`APP_STORE_URL` is a placeholder id and `RELEASED` is `false`, which is what
-puts the "soon" chip on the download buttons. **Change both together** — that
-chip is the only thing telling visitors the link does not work yet.
+Everything about availability lives in [`src/site.js`](src/site.js). Nothing
+else on the page hardcodes a URL, a version or a claim about what works today.
+
+Homebrew is the real channel:
+
+```bash
+brew install cmrd-consulting/tap/ratify
+```
+
+That one line is the whole install — `brew` resolves `cmrd-consulting/tap` to
+[`CMRD-Consulting/homebrew-tap`][tap] itself, so the page deliberately does not
+teach a separate `brew tap` step. The DMG comes from
+[`CMRD-Consulting/ratify-releases`][releases], which is public because the app's
+own repository is private and Homebrew downloads with no credentials.
+
+Two flags gate what the page promises, and each is false for its own reason:
+
+| | | |
+|---|---|---|
+| `NOTARIZED` | `false` | The DMG has no Developer ID signature yet, so macOS quarantines it. While this is false the page shows the `xattr` command under the install buttons. **Flip it only after `spctl -a -vv` accepts a shipped bundle** — not when the certificate arrives. |
+| `RELEASED` | `false` | The Mac App Store link is a placeholder id, which is what puts the "soon" chip on that button. **Change it and `APP_STORE_URL` together** — the chip is the only thing telling visitors the link does not work. |
+
+The App Store is a second channel and further off than it looks: the App
+Sandbox forbids the subprocess Ratify uses to read your `gh` CLI token, so that
+convenience has to survive the move before the listing can exist.
+
+`RELEASES_URL` points at `/releases/latest` rather than a pinned tag on purpose
+— otherwise the site needs a deploy on every release just to stay honest, and
+the build shipped in between quietly points at an old DMG. **Cutting a release
+requires no change here.**
+
+[tap]: https://github.com/CMRD-Consulting/homebrew-tap
+[releases]: https://github.com/CMRD-Consulting/ratify-releases
 
 ## Deploying
 

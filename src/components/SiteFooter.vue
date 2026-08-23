@@ -1,6 +1,6 @@
 <script setup>
 import Wordmark from "./Wordmark.vue";
-import { CMRD_URL, REQUIREMENTS } from "../site.js";
+import { CMRD_URL, REQUIREMENTS, RELEASES_URL, TAP_URL } from "../site.js";
 
 const year = new Date().getFullYear();
 
@@ -21,6 +21,8 @@ const columns = [
       { href: "#who", label: "Who it's for" },
       { href: "#trust", label: "Security" },
       { href: "#get", label: "Get Ratify" },
+      { href: RELEASES_URL, label: "Releases", external: true },
+      { href: TAP_URL, label: "Homebrew tap", external: true },
     ],
   },
 ];

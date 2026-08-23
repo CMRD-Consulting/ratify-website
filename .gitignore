@@ -8,3 +8,6 @@ dist/
 # 2x capture sources from `npm run shoot`; only the re-encoded
 # WebP beside them is shipped and committed.
 public/shots/src/
+
+# Local Netlify folder
+.netlify

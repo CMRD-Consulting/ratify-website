@@ -10,6 +10,7 @@ import Reviewing from "./components/sections/Reviewing.vue";
 import Keyboard from "./components/sections/Keyboard.vue";
 import Configure from "./components/sections/Configure.vue";
 import WhoItsFor from "./components/sections/WhoItsFor.vue";
+import Privacy from "./components/sections/Privacy.vue";
 import Trust from "./components/sections/Trust.vue";
 import Cta from "./components/sections/Cta.vue";
 </script>
@@ -33,6 +34,7 @@ import Cta from "./components/sections/Cta.vue";
     <Keyboard />
     <Configure />
     <WhoItsFor />
+    <Privacy />
     <Trust />
     <Cta />
   </main>

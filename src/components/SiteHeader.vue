@@ -24,6 +24,7 @@ const nav = [
   { href: "#diffs", label: "Large PRs" },
   { href: "#keys", label: "Keyboard" },
   { href: "#who", label: "Who it's for" },
+  { href: "#privacy", label: "Privacy" },
 ];
 </script>
 

@@ -26,6 +26,20 @@ for the two things that are vendored rather than fetched.
 verbatim: the same palette, type scale, radii, canvas wash and focus ring the
 app ships. Nothing here re-picks a colour.
 
+The app ships **two** palettes as of 2026-08-22 — Nocturne (dark) and
+"C · Slate" (light) — but only Nocturne is vendored here, and that is
+deliberate. Light mode in the app is a pure override layer
+(`src/assets/ratify-light.css`) selected by `:root[data-theme="light"]`; this
+page never sets that attribute, so importing it would ship dead bytes. **The
+page is dark, full stop.** A marketing page is a poster, not an app: it has no
+preference to remember and no menu bar to sit inside, which were the two
+reasons the app grew a light theme at all.
+
+What did change here is that the app collapsed its ad-hoc white and black
+alphas into named tokens — `--color-fill*`, `--color-hairline*`,
+`--color-well`, `--color-scrollbar*`, the `*-wash` / `*-border` pairs. The
+copied primitives below use those names now, because the app's do.
+
 Two rules carry over unchanged, and they are why the page looks the way it does:
 
 - **Indigo is chrome** — links, focus, the mark, filled buttons. The install
@@ -40,7 +54,7 @@ Two rules carry over unchanged, and they are why the page looks the way it does:
 | | |
 |---|---|
 | **Unlayered block** | The token file styles bare `a` outside any cascade layer, and unlayered beats layered no matter how specific the layered selector is. The app never notices — its buttons are `<button>` elements. Here they are links, so `a.btn-chrome`, `a.nav-link` and `a.link` have to live outside the layer too. **Read the comment there before adding a link style**; every anchor-based button silently renders indigo otherwise. |
-| **Copied primitives** | `.wordmark*`, `.kbd*`, `.btn-*`, `.panel`, `.card`, `.eyebrow`, `.pill` — lifted verbatim from the app's `main.css`. They are design-system vocabulary rather than app behaviour. Keep them byte-identical; if one drifts, copy it again rather than adjusting it here. |
+| **Copied primitives** | `.wordmark*`, `.kbd*`, `.btn-*`, `.panel`, `.card`, `.eyebrow`, `.pill` — lifted verbatim from the app's `main.css`. They are design-system vocabulary rather than app behaviour. Keep them byte-identical; if one drifts, copy it again rather than adjusting it here. **`sync-tokens` does not cover these** — it only re-vendors the token file, so a change to the app's `main.css` has to be copied across by hand. |
 | **Site-only vocabulary** | `.display`, `.h2`, `.h3`, `.lede`, `.prose-body`, `.shot`, `.reveal`. The app's type scale stops at 19px because every pixel is queue density; that decision does not survive a 1180px marketing column, so prose gets its own ramp — still tracked at the app's `-0.011em`. |
 
 ## Screenshots, and why they are fiction
@@ -95,6 +109,10 @@ RATIFY_REPO=~/code/ratify npm run sync-tokens
 The header is regenerated and the app's file is taken verbatim below it, so the
 vendored copy is a pure function of the source. **Changing the palette in the
 app means running this** — nothing warns you otherwise.
+
+It syncs `ratify-tokens.css` only. The app's light overrides are a separate
+file and are deliberately not vendored — see
+[The design system is the app's](#the-design-system-is-the-apps).
 
 ## How Ratify ships, and what the page has to say about it
 

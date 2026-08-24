@@ -44,13 +44,13 @@
     height: 10px;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgb(255 255 255 / 0.1);
+    background: var(--color-scrollbar);
     border-radius: 99px;
     border: 3px solid transparent;
     background-clip: content-box;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgb(255 255 255 / 0.18);
+    background: var(--color-scrollbar-hover);
     background-clip: content-box;
   }
   ::-webkit-scrollbar-track {
@@ -96,8 +96,8 @@
     padding: 1px 5px;
     border-radius: 3px;
     color: var(--color-zinc-500);
-    background: rgb(255 255 255 / 0.05);
-    border: 1px solid rgb(255 255 255 / 0.08);
+    background: var(--color-fill);
+    border: 1px solid var(--color-hairline-strong);
     white-space: nowrap;
     letter-spacing: 0.12em;
   }
@@ -107,17 +107,20 @@
   }
 
   .kbd-approve {
-    color: var(--color-approve);
-    background: rgb(52 211 153 / 0.1);
-    border-color: rgb(52 211 153 / 0.28);
+    color: var(--color-approve-text);
+    background: var(--color-approve-wash);
+    border-color: var(--color-approve-border);
   }
 
   .kbd-changes {
     color: var(--color-changes);
-    background: rgb(245 177 61 / 0.1);
-    border-color: rgb(245 177 61 / 0.26);
+    background: var(--color-changes-wash);
+    border-color: var(--color-changes-border);
   }
 
+  /* The rgb() literals in .btn-approve and .btn-chrome are deliberate and must
+     NOT be tokenised. They are rings, glows and specular highlights on a
+     saturated fill that is identical in both of the app's themes. */
   .btn-approve {
     display: inline-flex;
     align-items: center;
@@ -183,13 +186,13 @@
     font-size: var(--text-body);
     font-weight: 500;
     color: var(--color-zinc-200);
-    background: rgb(255 255 255 / 0.07);
-    border: 1px solid rgb(255 255 255 / 0.1);
+    background: var(--color-fill-raised);
+    border: 1px solid var(--color-hairline-strong);
     transition: background 120ms ease;
   }
 
   .btn-neutral:hover {
-    background: rgb(255 255 255 / 0.11);
+    background: var(--color-fill-hover);
   }
 
   .panel {

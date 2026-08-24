@@ -17,10 +17,10 @@ import Shot from "../Shot.vue";
         </p>
 
         <p class="prose-body mt-4">
-          Sections, snippets and key bindings live alongside them. Every control
-          commits on change; there is no save button. Rebinding is the one
-          exception, because a conflict has to be resolved before it can be
-          saved.
+          Sections, snippets, key bindings and appearance live alongside them.
+          Every control commits on change; there is no save button. Rebinding is
+          the one exception, because a conflict has to be resolved before it can
+          be saved.
         </p>
       </div>
 

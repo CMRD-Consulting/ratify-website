@@ -66,6 +66,12 @@ const features = [
       '<path d="M15 6a3 3 0 1 1 3 3h-3zM9 6a3 3 0 1 0-3 3h3zM15 18a3 3 0 1 0 3-3h-3zM9 18a3 3 0 1 1-3-3h3zM9 9h6v6H9z"/>',
   },
   {
+    title: "Light and dark, or neither",
+    body: "System follows macOS and changes with it, schedule included, without a restart. The neutral ramp is mirrored by measured contrast rather than by eye, so nothing that was readable at night stops being readable by day.",
+    glyph:
+      '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/>',
+  },
+  {
     title: "A badge in the menu bar",
     body: "The count of what is actually waiting on you, and a popover for a glance without opening the window. ⌃⌥L summons the full app when you want it.",
     glyph:

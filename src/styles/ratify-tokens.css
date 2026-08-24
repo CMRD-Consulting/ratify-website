@@ -2,7 +2,7 @@
  * Ratify — Nocturne tokens.  VENDORED: do not edit here.
  *
  *   source: CMRD-Consulting/Ratify · src/assets/ratify-tokens.css
- *   copied: 2026-08-23
+ *   copied: 2026-08-24
  *
  * The site used to import this straight out of the app checkout next door.
  * That stopped working when the site became its own repository, and vendoring
@@ -49,6 +49,41 @@
   --color-hairline-strong: rgb(255 255 255 / 0.12);
   --color-inset-highlight: rgb(255 255 255 / 0.06);
 
+  /* Hairlines have three weights, not seven. Anything between these is drift.
+     `border-hairline-soft` / `-hairline` / `-hairline-strong` are the only
+     three borders in the app. */
+  --color-hairline-soft: rgb(255 255 255 / 0.045);
+
+  /* Raised fills, in three steps. A fill is a surface that sits above its
+     ground; in light mode these invert to a darkening, which is why they are
+     named by role and not by colour. */
+  --color-fill-subtle: rgb(255 255 255 / 0.035);
+  --color-fill: rgb(255 255 255 / 0.055);
+  --color-fill-raised: rgb(255 255 255 / 0.08);
+
+  /* The hover of a filled control. A separate step, not a fourth weight:
+     collapsing a resting state and its hover into one token silently deletes
+     the hover. */
+  --color-fill-hover: rgb(255 255 255 / 0.11);
+
+  /* The opposite of a fill: a recessed inset. Text fields, code blocks. */
+  --color-well: rgb(0 0 0 / 0.28);
+
+  /* The scrollbar thumb is its own control with its own two states, and its
+     hover jump (0.10 → 0.18) is much larger than any button's. Folding it into
+     the fill scale inverted it. */
+  --color-scrollbar: rgb(255 255 255 / 0.10);
+  --color-scrollbar-hover: rgb(255 255 255 / 0.18);
+
+  /* Opaque surfaces that float above the canvas and cannot be translucent,
+     because something scrolls underneath them. */
+  --color-surface-raised: #131316; /* dropdown panels */
+  --color-surface-sheet: #18181B;  /* modal sheets, toasts */
+  --color-scrim: rgb(9 9 11 / 0.55);
+  /* The surface diffs and queue rows are painted on. Transparent in dark (the
+     canvas shows through); white in light (content is white on a grey ground). */
+  --color-surface-content: transparent;
+
   /* Row states. Selection is fill + spine; focus is a ring, never a fill. */
   --color-row-hover: rgb(255 255 255 / 0.028);
   --color-row-selected: rgb(255 255 255 / 0.055);
@@ -68,10 +103,54 @@
   --color-approve: #34D399;
   --color-approve-fg: #022C22;  /* text on a filled approve button */
   --color-approve-dim: #6EE7B7;
+
+  /* Mint splits in two. `--color-approve` is a FILL and is identical in both
+     themes, because its text is --color-approve-fg sitting on top of it.
+     `--color-approve-text` is mint as a FOREGROUND, which on a light canvas
+     must be far darker or it fails contrast. Never use --color-approve as a
+     text colour. */
+  --color-approve-text: #34D399;
   --color-changes: #F5B13D;     /* also means "unsent" — pending comments */
+  --color-changes-dim: #F5CE8D;  /* on a washed changes chip */
   --color-danger: #FF5C4D;
+  --color-danger-dim: #FF8A7D;   /* on a washed danger chip */
+  --color-danger-muted: #B4948F; /* "blocked by failing checks" — quiet, not alarming */
   --color-pending: #A1A1AA;
   --color-since: #22D3EE;       /* "since my review" only. Never a verdict. */
+  --color-since-fg: #0B3138;    /* text on a filled since chip */
+
+  /* Washes and borders for chips, banners and thread cards. One pair per
+     semantic — chips used to wash at 0.10/0.26 and banners at 0.07/0.30, which
+     was accumulation rather than a decision. */
+  --color-approve-wash: rgb(52 211 153 / 0.10);
+  --color-approve-border: rgb(52 211 153 / 0.28);
+  --color-changes-wash: rgb(245 177 61 / 0.10);
+  --color-changes-border: rgb(245 177 61 / 0.28);
+  --color-danger-wash: rgb(255 92 77 / 0.10);
+  --color-danger-border: rgb(255 92 77 / 0.28);
+  --color-brand-tint: rgb(129 140 248 / 0.10);
+  --color-brand-border: rgb(129 140 248 / 0.30);
+
+  /* Solid-ish bars and rows, which need more presence than a wash. */
+  --color-approve-bar: rgb(52 211 153 / 0.55);  /* WeightBar additions */
+  --color-danger-bar: rgb(255 92 77 / 0.55);    /* WeightBar deletions */
+  --color-approve-row: rgb(52 211 153 / 0.16);  /* a just-actioned queue row */
+
+  /* The near-invisible zebra on manifest and header rows. Four different
+     values (0.012, 0.014, 0.015, 0.02) collapse to one. */
+  --color-row-stripe: rgb(255 255 255 / 0.014);
+
+  /* Dropped shadows. A dark theme's 0.7-alpha black is a hole punched in a
+     light page, so this is one of the few tokens that changes a lot. */
+  --color-shadow-strong: rgb(0 0 0 / 0.7);
+
+  /* The focus ring and the field's focus border. Indigo-400 at these alphas is
+     invisible against white, so light overrides all four. A ring is a line,
+     not a field, so light needs LESS alpha here — the opposite of a wash. */
+  --color-brand-focus: rgb(129 140 248 / 0.55);
+  --color-brand-underline: rgb(129 140 248 / 0.4);
+  --color-focus-ring: rgb(129 140 248 / 0.65);
+  --color-focus-halo: rgb(129 140 248 / 0.16);
 
   /* ── Diff ─────────────────────────────────────────────────────────────
    * Flat rgba only. No backdrop-filter, shadow or gradient on a diff row,
@@ -108,6 +187,10 @@
  * Two panes. The header strip is one component that renders inline below
  * 1560px and as a right rail above it — a breakpoint, not a fork. */
 :root {
+  /* Native scrollbars, form controls and the window's own background follow
+     this, not our CSS. Light mode overrides it in ratify-light.css. */
+  color-scheme: dark;
+
   --ratify-topbar-h: 56px;   /* raised from the kit's 44px on request */
   --ratify-rail-h: 30px;        /* bottom key-hint rail */
   --ratify-titlebar-pad: 72px;  /* reserved for the traffic lights */
@@ -140,7 +223,7 @@ a:hover { color: var(--color-brand-hover); }
  * A ring, never a fill — a fill means "selected", which is a different thing. */
 :focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px rgb(129 140 248 / 0.65), 0 0 0 3px rgb(129 140 248 / 0.16);
+  box-shadow: 0 0 0 1px var(--color-focus-ring), 0 0 0 3px var(--color-focus-halo);
 }
 
 ::selection { background: rgb(99 102 241 / 0.3); }

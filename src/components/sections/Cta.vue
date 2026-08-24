@@ -9,17 +9,12 @@ import { RELEASES_URL, TAP_URL, REQUIREMENTS } from "../../site.js";
 
 <template>
   <Section id="get">
+    <!-- The gradient lives in site.css rather than in a style attribute here,
+         because it is one of the few things on the page that cannot be
+         expressed as a swapped token: a darkening in Nocturne has to become a
+         lightening in Slate or the panel reads as a hole. -->
     <div
-      class="relative overflow-hidden rounded-2xl border border-white/[0.08] px-6 py-16 text-center md:px-12 md:py-20"
-      style="
-        background-image:
-          radial-gradient(
-            620px 320px at 50% -10%,
-            rgb(99 102 241 / 0.16),
-            transparent 70%
-          ),
-          linear-gradient(180deg, rgb(24 24 27 / 0.7), rgb(12 13 15 / 0.7));
-      "
+      class="cta-panel relative overflow-hidden rounded-2xl border border-hairline px-6 py-16 text-center md:px-12 md:py-20"
     >
       <p class="eyebrow">Get Ratify</p>
       <h2 class="h2 mx-auto mt-4 max-w-xl">

@@ -5,6 +5,12 @@
    re-picks a colour. */
 @import "./ratify-tokens.css";
 
+/* The app's light palette, vendored the same way and just as verbatim: values
+   only, selected by `:root[data-theme="light"]`. The site sets that attribute
+   on every visit — see public/theme-boot.js — so Nocturne is what you get when
+   the theming layer fails, rather than nothing. */
+@import "./ratify-light.css";
+
 /* ─────────────────────────────────────────────────────────────────────────
    Two rules the whole palette depends on, and this site obeys them too:
 
@@ -14,6 +20,33 @@
         appears as decoration. On this page mint is spent only where the copy
         is literally about approving.
    ───────────────────────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   The two colours on this page the app did not pick, and why they had to be
+   picked here.
+
+   A marketing grid is one hairline lattice with opaque cells sitting in it.
+   The cells cannot be `--color-surface-content`, the app's token for exactly
+   this job, because that is `transparent` in dark — the app paints diffs and
+   queue rows straight onto the canvas, and letting the lattice wash through
+   thirteen cells is not the same thing at all.
+
+   So the pair is named once, here, and themes like everything else. Both are
+   the canvas nudged one step toward the reader, which is the app's elevation
+   rule read in each theme's own direction. The hover inverts, and that is not
+   drift: white has nowhere lighter to go, so light darkens on hover exactly
+   the way `--color-fill-hover` does.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  --color-cell: #0b0b0e;
+  --color-cell-hover: #111116;
+}
+
+:root[data-theme="light"] {
+  --color-cell: #ffffff;
+  --color-cell-hover: #fafafa;
+}
 
 @layer base {
   /* The app pins the body; a page has to scroll and be readable.
@@ -242,6 +275,72 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+   Theme-aware chrome. Three things on this page cannot be expressed as one
+   set of tokens, because what they are made of changes between the themes
+   rather than merely what colour it is.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  /* One segment of the theme switcher. Quiet until it is the chosen one: this
+     is a preference, not a call to action, and three indigo controls sitting
+     beside the Install button would be four things competing for one click. */
+  .theme-segment {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 26px;
+    border-radius: 6px;
+    color: var(--color-zinc-500);
+    cursor: pointer;
+    transition:
+      background 120ms ease,
+      color 120ms ease;
+  }
+
+  .theme-segment:hover {
+    color: var(--color-zinc-300);
+  }
+
+  .theme-segment.is-active {
+    color: var(--color-zinc-100);
+    background: var(--color-fill-raised);
+    box-shadow: inset 0 1px 0 var(--color-inset-highlight);
+  }
+
+  /* The closing panel carries its own light rather than borrowing the page's:
+     it is the last thing on a long page and has to lift off it. An indigo wash
+     over a darkening in Nocturne; the same wash over a lightening in Slate,
+     where a dark gradient would read as a hole rather than as elevation. */
+  .cta-panel {
+    background-image:
+      radial-gradient(
+        620px 320px at 50% -10%,
+        rgb(99 102 241 / 0.16),
+        transparent 70%
+      ),
+      linear-gradient(180deg, rgb(24 24 27 / 0.7), rgb(12 13 15 / 0.7));
+  }
+
+  :root[data-theme="light"] .cta-panel {
+    background-image:
+      radial-gradient(
+        620px 320px at 50% -10%,
+        rgb(99 102 241 / 0.1),
+        transparent 70%
+      ),
+      linear-gradient(180deg, rgb(255 255 255 / 0.92), rgb(255 255 255 / 0.5));
+  }
+
+  /* The CMRD lockup is drawn in flat white on transparency and would be
+     invisible on Slate's canvas. One flat colour is what makes brightness(0)
+     an exact inversion here rather than an approximation of one. */
+  :root[data-theme="light"] .cmrd-lockup {
+    filter: brightness(0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
    Unlayered on purpose.
 
    The token file sets `a { color: var(--color-brand) }` outside any cascade
@@ -271,7 +370,7 @@ a.link {
   color: var(--color-brand);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgb(129 140 248 / 0.4);
+  text-decoration-color: var(--color-brand-underline);
 }
 
 a.link:hover {
@@ -339,8 +438,13 @@ a.nav-link:hover {
     text-wrap: pretty;
   }
 
-  /* Screenshots are of a dark app on a dark page, so they need an edge or they
-     dissolve into the canvas. Hairline + the app's own radius, nothing more. */
+  /* A screenshot of the app, on a page wearing the app's palette, needs an
+     edge or it dissolves into the canvas. Hairline + the app's own radius,
+     nothing more.
+
+     The shadow is tokenised because it has to invert. A dark theme's
+     0.7-alpha black is a hole punched in a light page — the app's own note,
+     beside --color-shadow-strong, which is where both values come from. */
   .shot {
     display: block;
     width: 100%;
@@ -348,8 +452,8 @@ a.nav-link:hover {
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-hairline-strong);
     box-shadow:
-      0 1px 0 rgb(255 255 255 / 0.04) inset,
-      0 24px 64px -24px rgb(0 0 0 / 0.8);
+      0 1px 0 var(--color-inset-highlight) inset,
+      0 24px 64px -24px var(--color-shadow-strong);
     background: var(--color-canvas);
   }
 

@@ -1,10 +1,11 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import Wordmark from "./Wordmark.vue";
+import ThemeToggle from "./ThemeToggle.vue";
 
 /**
- * The top bar, borrowing the app's own chrome: 56px tall, translucent
- * #0C0D0F at 80% over blur(16px), one hairline underneath.
+ * The top bar, borrowing the app's own chrome: 56px tall, `--color-chrome` at
+ * 80% over blur(16px), one hairline underneath.
  *
  * The hairline only appears once the page has moved, so the bar sits on the
  * hero without cutting a line across it.
@@ -30,7 +31,7 @@ const nav = [
 <template>
   <header
     class="fixed inset-x-0 top-0 z-50 border-b transition-colors duration-200"
-    :class="scrolled ? 'chrome-bar border-white/[0.06]' : 'border-transparent'"
+    :class="scrolled ? 'chrome-bar border-hairline' : 'border-transparent'"
     :style="{ height: 'var(--ratify-topbar-h)' }"
   >
     <div
@@ -45,15 +46,21 @@ const nav = [
           v-for="item in nav"
           :key="item.href"
           :href="item.href"
-          class="nav-link rounded-md px-2.5 py-1.5 text-[13px] hover:bg-white/[0.06]"
+          class="nav-link rounded-md px-2.5 py-1.5 text-[13px] hover:bg-fill"
           >{{ item.label }}</a
         >
       </nav>
 
       <!-- The install command does not fit a 56px bar and a badge for a store
            Ratify is not in yet would be worse than nothing, so the persistent
-           call to action is a jump to the section that holds both. -->
-      <div class="ml-auto flex items-center gap-3">
+           call to action is a jump to the section that holds both.
+
+           The switcher goes before it and stays quiet, which is the order of
+           business: someone arrives to find out what this is, not to pick a
+           palette. It is here at all because the page claims the app has
+           one. -->
+      <div class="ml-auto flex items-center gap-2 sm:gap-3">
+        <ThemeToggle />
         <a href="#get" class="btn-chrome !h-8 !rounded-[8px] !px-3.5 !text-[13px]"
           >Install</a
         >

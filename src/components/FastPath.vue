@@ -6,6 +6,12 @@ import Kbd from "./Kbd.vue";
  *
  * `a` is tinted mint because it is a verdict key; nothing else here is
  * coloured, which is exactly how the app treats them.
+ *
+ * The tint is --color-approve-TEXT, not --color-approve. Mint splits in two:
+ * the fill is identical in both palettes because its own foreground sits on
+ * top of it, while mint as a foreground has to darken to emerald-700 on a
+ * light canvas or it fails contrast. The app's light palette says so in as
+ * many words — "never use --color-approve as a text colour".
  */
 const steps = [
   { keys: ["⌃⌥L"], action: "summon", note: "the queue is already fresh" },
@@ -38,7 +44,9 @@ const steps = [
         </span>
         <span
           class="font-mono text-[13px] text-zinc-200"
-          :class="step.tone === 'approve' && 'text-[color:var(--color-approve)]'"
+          :class="
+            step.tone === 'approve' && 'text-[color:var(--color-approve-text)]'
+          "
           >{{ step.action }}</span
         >
         <span

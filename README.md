@@ -6,8 +6,10 @@
 
 ---
 
-One page, no backend, no analytics, no cookies. Vite + Vue 3 + Tailwind 4,
-built to a static `dist/` and served by Netlify.
+One page, no backend, no analytics, no cookies. The only thing it stores is
+which palette you picked, under `ratify-theme` in localStorage, and only once
+you pick one. Vite + Vue 3 + Tailwind 4, built to a static `dist/` and served
+by Netlify.
 
 ```bash
 npm install
@@ -17,23 +19,46 @@ npm run preview  # serve dist/ locally
 ```
 
 Node 22.12.0 (see [`.nvmrc`](.nvmrc)). A clean clone builds with nothing else
-installed — see [Refreshing from the app repo](#refreshing-from-the-app-repo)
-for the two things that are vendored rather than fetched.
+installed — the two palettes and every screenshot are committed, so neither the
+app repo nor the capture tooling is needed to build the site.
 
 ## The design system is the app's
 
-`src/styles/ratify-tokens.css` is the desktop app's own token file, vendored
-verbatim: the same palette, type scale, radii, canvas wash and focus ring the
-app ships. Nothing here re-picks a colour.
+The palette, type scale, radii, canvas wash and focus ring are the desktop
+app's own token files, vendored verbatim.
 
-The app ships **two** palettes as of 2026-08-22 — Nocturne (dark) and
-"C · Slate" (light) — but only Nocturne is vendored here, and that is
-deliberate. Light mode in the app is a pure override layer
-(`src/assets/ratify-light.css`) selected by `:root[data-theme="light"]`; this
-page never sets that attribute, so importing it would ship dead bytes. **The
-page is dark, full stop.** A marketing page is a poster, not an app: it has no
-preference to remember and no menu bar to sit inside, which were the two
-reasons the app grew a light theme at all.
+The app ships **two** palettes — Nocturne (dark) and "C · Slate" (light) — and
+so, as of 2026-08-24, does this page. Both are vendored:
+[`ratify-tokens.css`](src/styles/ratify-tokens.css) declares every token and
+[`ratify-light.css`](src/styles/ratify-light.css) is a values-only override
+layer selected by `:root[data-theme="light"]`, exactly as the app has them.
+Nothing here re-picks a colour in either palette.
+
+This page used to be dark and say so — a poster has no preference to remember
+and no menu bar to sit inside. What changed the answer is that the page makes a
+claim about the product ("light and dark, or neither") and a poster that cannot
+do the thing it is describing is a weaker argument than one that can. The
+switcher in the header is the feature working, which is also why it carries all
+three states rather than being a two-way flip.
+
+The light ramp is **solved, not picked**: each light shade's contrast against
+the light canvas equals its dark counterpart's against the dark one, and the
+app's own `contrast.test.js` enforces that to within 0.15. `text-zinc-400` in
+this repo therefore means "the fourth step down", not `#9F9FA9`, and it flips
+on its own. Do not eyeball a replacement here — fix it in the app and re-sync.
+
+Two consequences worth knowing before you touch a colour:
+
+- **Mint splits in two.** `--color-approve` is a *fill* and is byte-identical in
+  both palettes, because the text sitting on it is `--color-approve-fg`. Mint as
+  a *foreground* is `--color-approve-text`, which has to darken to emerald-700
+  on a light canvas or it fails contrast. Never use `--color-approve` as a text
+  colour; the site got this wrong once already.
+- **The mark has two files.** Indigo-400 is 2.55:1 on Slate's canvas, so
+  [`ratify-mark-light.svg`](public/ratify-mark-light.svg) is the same wireframe
+  in indigo-600 — the value the app's token file already annotates "the mark on
+  light". It is a pure function of the other one:
+  `sed 's/#818CF8/#4F46E5/g' public/ratify-mark.svg > public/ratify-mark-light.svg`.
 
 What did change here is that the app collapsed its ad-hoc white and black
 alphas into named tokens — `--color-fill*`, `--color-hairline*`,
@@ -49,13 +74,35 @@ Two rules carry over unchanged, and they are why the page looks the way it does:
   mint is spent only where the copy is literally about approving: the `a`
   keycap and the verdict-key row. Nowhere else.
 
-[`src/styles/site.css`](src/styles/site.css) has three parts after that import:
+[`src/styles/site.css`](src/styles/site.css) has three parts after those imports:
 
 | | |
 |---|---|
 | **Unlayered block** | The token file styles bare `a` outside any cascade layer, and unlayered beats layered no matter how specific the layered selector is. The app never notices — its buttons are `<button>` elements. Here they are links, so `a.btn-chrome`, `a.nav-link` and `a.link` have to live outside the layer too. **Read the comment there before adding a link style**; every anchor-based button silently renders indigo otherwise. |
-| **Copied primitives** | `.wordmark*`, `.kbd*`, `.btn-*`, `.panel`, `.card`, `.eyebrow`, `.pill` — lifted verbatim from the app's `main.css`. They are design-system vocabulary rather than app behaviour. Keep them byte-identical; if one drifts, copy it again rather than adjusting it here. **`sync-tokens` does not cover these** — it only re-vendors the token file, so a change to the app's `main.css` has to be copied across by hand. |
-| **Site-only vocabulary** | `.display`, `.h2`, `.h3`, `.lede`, `.prose-body`, `.shot`, `.reveal`. The app's type scale stops at 19px because every pixel is queue density; that decision does not survive a 1180px marketing column, so prose gets its own ramp — still tracked at the app's `-0.011em`. |
+| **Copied primitives** | `.wordmark*`, `.kbd*`, `.btn-*`, `.panel`, `.card`, `.eyebrow`, `.pill` — lifted verbatim from the app's `main.css`. They are design-system vocabulary rather than app behaviour. Keep them byte-identical; if one drifts, copy it again rather than adjusting it here. **`sync-tokens` does not cover these** — it only re-vendors the two token files, so a change to the app's `main.css` has to be copied across by hand. |
+| **Site-only vocabulary** | `.display`, `.h2`, `.h3`, `.lede`, `.prose-body`, `.shot`, `.reveal`, `.theme-segment`, `.cta-panel`. The app's type scale stops at 19px because every pixel is queue density; that decision does not survive a 1180px marketing column, so prose gets its own ramp — still tracked at the app's `-0.011em`. `--color-cell` and `--color-cell-hover` live here too: they are the only two colours on the page the app did not pick, and the comment beside them says why `--color-surface-content` could not do the job. |
+
+## How the theme is wired
+
+Three files, and the split between the first two is the whole design:
+
+| | |
+|---|---|
+| [`public/theme-boot.js`](public/theme-boot.js) | Render-blocking, classic, **not part of the bundle**. `src/main.js` is a module and modules are deferred, so by the time it runs the canvas has already been painted and someone on a light desktop watches the page flash Nocturne first. This reads the stored preference, resolves it, sets `data-theme`, and stops. |
+| [`src/theme.js`](src/theme.js) | Everything after the first frame: the reactive `theme` that `Shot.vue` and `Wordmark.vue` render from, the switcher's `choose()`, the `matchMedia` watcher, and the `theme-color` meta. |
+| [`src/components/ThemeToggle.vue`](src/components/ThemeToggle.vue) | System · Light · Dark as a `radiogroup` with roving tabindex — one tab stop, arrows within it. |
+
+The two halves share a storage key and a resolve rule and nothing else. **Keep
+them in step.** The app splits the same job the same way and for the same
+reason — `src/lib/theme.js` there, with `src-tauri/src/theme.rs` reading the
+same key at document-start.
+
+It is a real file rather than an inline `<script>` on purpose: `script-src
+'self'` already covers it, so the CSP in [`netlify.toml`](netlify.toml) never
+has to carry a hash that a later edit would silently invalidate.
+
+Dark needs no attribute. That is the failure mode being chosen: if the theming
+layer breaks, the page falls back to Nocturne rather than to nothing.
 
 ## Screenshots, and why they are fiction
 
@@ -67,9 +114,30 @@ handles and real proprietary source in the diff bodies. None of that belongs in
 a public repository or on a marketing page.
 
 ```bash
-npm run shoot     # drive the app, capture 2x PNGs into public/shots/src/
+npm run shoot     # drive the app in both palettes, 2x PNGs into public/shots/src/
 npm run shots     # re-encode those into the WebP the site ships
 ```
+
+**Every screen is captured twice**, because a Nocturne screenshot on a Slate
+page is the one thing that gives a themed page away. The two live at the same
+name under different directories, which is what lets `Shot.vue` take a single
+`src` and derive the other:
+
+```
+public/shots/inbox.webp          Nocturne
+public/shots/light/inbox.webp    C · Slate
+```
+
+The theme is driven the way a real user drives it, not by patching anything:
+the app's appearance setting ships as `system` and it resolves that through
+`prefers-color-scheme`, which is exactly what Playwright's `colorScheme`
+context option sets. What is captured is the app's own theming code doing its
+own job. **Adding a palette to the app means adding one line to `THEMES` in
+[`scripts/shoot.mjs`](scripts/shoot.mjs)** and nothing else.
+
+Only one palette's bytes are ever on the wire — `Shot.vue` swaps one `<img>`
+rather than stacking two — so the second set costs a fetch on the first switch
+rather than a doubled page weight.
 
 `shoot` needs the app running and Google Chrome installed:
 
@@ -98,21 +166,23 @@ legitimately. That exception is narrow and commented where it lives.
 
 ## Design tokens
 
-`src/styles/ratify-tokens.css` is vendored from the app, which is private.
-Refresh it from a sibling checkout:
+`src/styles/ratify-tokens.css` and `src/styles/ratify-light.css` are vendored
+from the app, which is private. Refresh both from a sibling checkout:
 
 ```bash
 npm run sync-tokens
 RATIFY_REPO=~/code/ratify npm run sync-tokens
 ```
 
-The header is regenerated and the app's file is taken verbatim below it, so the
-vendored copy is a pure function of the source. **Changing the palette in the
-app means running this** — nothing warns you otherwise.
+Each header is regenerated and the app's file is taken verbatim below it, so a
+vendored copy is a pure function of its source. **Changing either palette in
+the app means running this** — nothing warns you otherwise, and a palette that
+moves in one theme and not the other is the failure you will not see until
+someone flips the switcher.
 
-It syncs `ratify-tokens.css` only. The app's light overrides are a separate
-file and are deliberately not vendored — see
-[The design system is the app's](#the-design-system-is-the-apps).
+It syncs those two files and nothing else. The copied primitives in
+[`site.css`](src/styles/site.css) come from the app's `main.css` and still have
+to be carried across by hand.
 
 ## How Ratify ships, and what the page has to say about it
 

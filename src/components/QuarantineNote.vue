@@ -19,8 +19,8 @@ import { NOTARIZED, QUARANTINE_COMMAND } from "../site.js";
 <template>
   <div
     v-if="!NOTARIZED"
-    class="mx-auto mt-8 w-full min-w-0 max-w-md rounded-[10px] border border-white/[0.08]
-           bg-white/[0.02] px-4 py-3 text-left"
+    class="mx-auto mt-8 w-full min-w-0 max-w-md rounded-[10px] border border-hairline
+           bg-fill-subtle px-4 py-3 text-left"
   >
     <p class="text-[12px] leading-relaxed text-[var(--color-zinc-400)]">
       <strong class="font-semibold text-[var(--color-zinc-200)]"

@@ -83,7 +83,7 @@ const app = [
               class="font-mono text-[13px]"
               :class="
                 step.tone === 'approve'
-                  ? 'text-[color:var(--color-approve)]'
+                  ? 'text-[color:var(--color-approve-text)]'
                   : 'text-zinc-200'
               "
               >{{ step.label }}</span

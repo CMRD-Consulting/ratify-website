@@ -73,11 +73,11 @@ const cases = [
       </p>
     </div>
 
-    <ul class="mt-10 space-y-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06]">
+    <ul class="mt-10 space-y-px overflow-hidden rounded-xl border border-hairline bg-hairline">
       <li
         v-for="(c, i) in cases"
         :key="c.who"
-        class="grid gap-2 bg-[#0B0B0E] p-6 md:grid-cols-[minmax(0,17rem)_1fr] md:gap-8 md:p-7"
+        class="grid gap-2 bg-cell p-6 md:grid-cols-[minmax(0,17rem)_1fr] md:gap-8 md:p-7"
         v-reveal="i * 50"
       >
         <h3 class="h3">{{ c.who }}</h3>

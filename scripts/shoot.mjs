@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Re-shoot the product screenshots against demo data.
+ * Re-shoot the product screenshots against demo data, in both palettes.
  *
  *   npm run dev  --prefix ../ratify      # the app's browser harness, port 1420
  *   npm run shoot
@@ -11,8 +11,18 @@
  * account) are rewritten in flight the same way. Run the app on a branch, on
  * main, dirty or clean — it does not matter and nothing needs cleaning up.
  *
+ * Every screen is captured twice, because the site is themed and a Nocturne
+ * screenshot on a Slate page is the one thing that gives a themed page away.
+ * The theme is driven the way a real user drives it rather than by patching
+ * anything: the app ships with its appearance set to "system", and the app
+ * resolves that through `prefers-color-scheme`, which is exactly what
+ * Playwright's `colorScheme` context option sets. Nothing is stubbed, so what
+ * is captured is the app's own theming code doing its own job.
+ *
  * Captures at 2x into docs-quality PNGs, then `npm run shots` re-encodes them
- * to the WebP the site actually ships.
+ * to the WebP the site actually ships. Nocturne lands in public/shots/src/ and
+ * Slate one level down in public/shots/src/light/, which is the same shape the
+ * shipped files take — see Shot.vue.
  *
  * Requires Google Chrome (driven via playwright-core's `channel: "chrome"`, so
  * there is no browser download).
@@ -31,6 +41,16 @@ import {
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = process.env.RATIFY_REPO ?? join(here, "..", "..", "ratify");
 const out = join(here, "..", "public", "shots", "src");
+
+/**
+ * The two palettes, and where each one's captures land. "dark" keeps the
+ * top-level directory it has always had so nothing that already points at a
+ * shot has to move.
+ */
+const THEMES = [
+  { scheme: "dark", dir: out },
+  { scheme: "light", dir: join(out, "light") },
+];
 const APP = process.env.RATIFY_URL ?? "http://localhost:1420/";
 
 const VIEWPORT = { width: 1440, height: 900 };
@@ -172,7 +192,9 @@ async function freshPage(browser, opts = {}) {
   const context = await browser.newContext({
     viewport: opts.viewport ?? VIEWPORT,
     deviceScaleFactor: opts.scale ?? 2,
-    colorScheme: "dark",
+    // The app's appearance setting is "system" and it resolves that through
+    // this media query, so this is the whole theme switch. See the header.
+    colorScheme: opts.scheme ?? "dark",
     // Motion shots need the app's transitions; stills do not.
     reducedMotion: opts.motion ? "no-preference" : "reduce",
   });
@@ -208,8 +230,6 @@ async function freshPage(browser, opts = {}) {
 }
 
 async function main() {
-  mkdirSync(out, { recursive: true });
-
   let browser;
   try {
     browser = await chromium.launch({ channel: "chrome" });
@@ -250,51 +270,68 @@ async function main() {
     process.exit(1);
   }
 
-  // Each shot gets a fresh page: the states are modal and unwinding them
-  // reliably is more fragile than just reloading.
-  for (const shot of SHOTS) {
-    const { context, page } = await open(shot);
-    await shot.setup(page);
-    await guard(page, shot.name);
-    await page.screenshot({ path: join(out, `${shot.name}.png`) });
-    console.log(`  ${shot.name}.png`);
-    await context.close();
-  }
+  for (const { scheme, dir: themeOut } of THEMES) {
+    mkdirSync(themeOut, { recursive: true });
+    console.log(`\n${scheme}`);
 
-  for (const shot of MOTION) {
-    const dir = join(out, shot.name);
-    mkdirSync(dir, { recursive: true });
-    const { context, page } = await open(shot, {
-      scale: 1,
-      motion: true,
-      viewport: { width: 1280, height: 800 },
-    });
-    const frames = [];
-    for (const [i, step] of shot.steps.entries()) {
-      await step(page);
-      const file = join(dir, `${String(i).padStart(2, "0")}.png`);
-      await page.screenshot({ path: file });
-      frames.push(file);
+    // Each shot gets a fresh page: the states are modal and unwinding them
+    // reliably is more fragile than just reloading. A fresh context per shot
+    // is also what keeps the theme honest — the app mirrors its preference to
+    // localStorage, and a reused context would carry the last one over.
+    for (const shot of SHOTS) {
+      const { context, page } = await open(shot, { scheme });
+      await shot.setup(page);
+      await guard(page, shot.name);
+      await page.screenshot({ path: join(themeOut, `${shot.name}.png`) });
+      console.log(`  ${shot.name}.png`);
+      await context.close();
     }
-    await guard(page, shot.name);
-    await context.close();
 
-    // Hold the first and last frames so the loop reads as a beat, not a blur.
-    const durations = frames.map((_, i) =>
-      i === 0 ? 900 : i === frames.length - 1 ? 1600 : 700,
-    );
-    const args = frames.flatMap((f, i) => ["-d", String(durations[i]), f]);
-    execFileSync(
-      "img2webp",
-      ["-loop", "0", "-q", "70", ...args, "-o", join(out, `${shot.name}.webp`)],
-      { stdio: "inherit" },
-    );
-    rmSync(dir, { recursive: true, force: true });
-    console.log(`  ${shot.name}.webp (${frames.length} frames)`);
+    for (const shot of MOTION) {
+      const dir = join(themeOut, shot.name);
+      mkdirSync(dir, { recursive: true });
+      const { context, page } = await open(shot, {
+        scheme,
+        scale: 1,
+        motion: true,
+        viewport: { width: 1280, height: 800 },
+      });
+      const frames = [];
+      for (const [i, step] of shot.steps.entries()) {
+        await step(page);
+        const file = join(dir, `${String(i).padStart(2, "0")}.png`);
+        await page.screenshot({ path: file });
+        frames.push(file);
+      }
+      await guard(page, shot.name);
+      await context.close();
+
+      // Hold the first and last frames so the loop reads as a beat, not a blur.
+      const durations = frames.map((_, i) =>
+        i === 0 ? 900 : i === frames.length - 1 ? 1600 : 700,
+      );
+      const args = frames.flatMap((f, i) => ["-d", String(durations[i]), f]);
+      execFileSync(
+        "img2webp",
+        [
+          "-loop",
+          "0",
+          "-q",
+          "70",
+          ...args,
+          "-o",
+          join(themeOut, `${shot.name}.webp`),
+        ],
+        { stdio: "inherit" },
+      );
+      rmSync(dir, { recursive: true, force: true });
+      console.log(`  ${shot.name}.webp (${frames.length} frames)`);
+    }
   }
 
   await browser.close();
-  console.log(`\nWrote ${SHOTS.length + MOTION.length} captures to public/shots/src/`);
+  const total = (SHOTS.length + MOTION.length) * THEMES.length;
+  console.log(`\nWrote ${total} captures to public/shots/src/`);
   console.log("Re-encode the stills with: npm run shots");
 }
 

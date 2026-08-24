@@ -18,7 +18,7 @@ import Cta from "./components/sections/Cta.vue";
 <template>
   <a
     href="#main"
-    class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-[#18181B] focus:px-3 focus:py-2 focus:text-[13px] focus:!text-zinc-100"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-surface-sheet focus:px-3 focus:py-2 focus:text-[13px] focus:!text-zinc-100"
     >Skip to content</a
   >
 

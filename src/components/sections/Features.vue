@@ -96,15 +96,15 @@ const features = [
       </p>
     </div>
 
-    <ul class="mt-12 grid gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-3">
+    <ul class="mt-12 grid gap-px overflow-hidden rounded-xl border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-3">
       <li
         v-for="(f, i) in features"
         :key="f.title"
-        class="bg-[#0B0B0E] p-6 transition-colors duration-150 hover:bg-[#111116]"
+        class="bg-cell p-6 transition-colors duration-150 hover:bg-cell-hover"
         v-reveal="Math.min(i, 5) * 45"
       >
         <span
-          class="flex h-9 w-9 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03]"
+          class="flex h-9 w-9 items-center justify-center rounded-lg border border-hairline bg-fill-subtle"
         >
           <!-- Static, author-written markup — no user input reaches this. -->
           <svg
@@ -122,6 +122,19 @@ const features = [
         <h3 class="h3 mt-4">{{ f.title }}</h3>
         <p class="prose-body mt-2 !text-[13px]">{{ f.body }}</p>
       </li>
+
+      <!-- Thirteen features do not divide by two or three, and what is left
+           over is the container showing through — which is the hairline the
+           1px gaps are made of. On Nocturne that is white at 6% and invisible;
+           on Slate it is black at 10% and reads as a grey slab bolted to the
+           end of the grid.
+
+           So the remainder is filled rather than the lattice re-plumbed. The
+           counts are exact and not a guess: 13 into two columns leaves one
+           slot, 13 into three leaves two, and one column leaves none — which
+           is the same thing these two breakpoints say. -->
+      <li aria-hidden="true" class="hidden bg-cell sm:block" />
+      <li aria-hidden="true" class="hidden bg-cell lg:block" />
     </ul>
   </Section>
 </template>

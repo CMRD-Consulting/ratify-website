@@ -29,7 +29,7 @@ const columns = [
 </script>
 
 <template>
-  <footer class="border-t border-white/[0.06] px-6 pb-12 pt-16 md:px-10">
+  <footer class="border-t border-hairline px-6 pb-12 pt-16 md:px-10">
     <div class="mx-auto w-full max-w-[1180px]">
       <div class="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
@@ -77,7 +77,7 @@ const columns = [
             alt="CMRD Consulting"
             width="395"
             height="327"
-            class="h-16 w-auto opacity-70 transition-opacity duration-200 group-hover:opacity-100"
+            class="cmrd-lockup h-16 w-auto opacity-70 transition-opacity duration-200 group-hover:opacity-100"
           />
         </a>
 

@@ -1,0 +1,204 @@
+/* ─────────────────────────────────────────────────────────────────────────
+ * Ratify — "C · Slate", the light palette.  VENDORED: do not edit here.
+ *
+ *   source: CMRD-Consulting/Ratify · src/assets/ratify-light.css
+ *   copied: 2026-08-24
+ *
+ * The site used to import this straight out of the app checkout next door.
+ * That stopped working when the site became its own repository, and vendoring
+ * beats a submodule here: the app repo is private, so a submodule would make
+ * this repo unclonable by anyone who cannot read the app.
+ *
+ * Values only: this redefines tokens declared in ratify-tokens.css and
+ * declares nothing new, under `:root[data-theme="light"]`. Dark needs no
+ * attribute, so a failure in the theming layer falls back to Nocturne rather
+ * than to nothing.
+ *
+ * The neutral ramp is SOLVED, not picked — each light shade's contrast against
+ * the light canvas equals its dark counterpart's against the dark one, and the
+ * app's own contrast test enforces it. Do not eyeball a replacement here; fix
+ * it in the app and re-sync.
+ *
+ * Regenerate with:  npm run sync-tokens
+ *
+ * Site-only rules belong in site.css, never here — anything added below is
+ * lost on the next sync.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  /* ── The zinc ramp, mirrored by luminance ───────────────────────────────
+   * The dark column is Tailwind 4.3.3's own zinc, which ships as oklch and
+   * never passes through this file — converted to sRGB here so the mirror is
+   * checkable. contrast.test.js pins the oklch source strings so a Tailwind
+   * upgrade that moves the ramp fails instead of silently splitting the themes.
+   *
+   * shade  dark      vs #09090B   light     vs #F4F4F5
+   * 50     #FAFAFA     19.06:1    #09090B     18.10:1  (declines, see below)
+   * 100    #F4F4F5     18.10:1    #09090C     18.09:1
+   * 200    #E4E4E7     15.68:1    #1B1B1E     15.63:1
+   * 300    #D4D4D8     13.46:1    #27272B     13.54:1
+   * 400    #9F9FA9      7.59:1    #4D4D57      7.60:1
+   * 500    #71717B      4.12:1    #75757F      4.15:1
+   * 600    #52525C      2.58:1    #9898A2      2.60:1   <- below AA in BOTH
+   * 700    #3F3F46      1.91:1    #B2B2BA      1.92:1
+   * 800    #27272A      1.34:1    #D4D4D8      1.34:1
+   *
+   * zinc-50 is the one shade that does not mirror, BY CHOICE. Pure black on
+   * #F4F4F5 is 19.11:1 and would mirror dark's 19.06:1 exactly; #09090B —
+   * zinc-950, the darkest zinc — gives 18.10:1. The 0.96 of ratio buys keeping
+   * every shade inside the zinc family, and symmetry with dark, where zinc-50's
+   * counterpart is the canvas colour. Imperceptible either way.
+   *
+   * zinc-50 and zinc-100 land almost on top of each other as a result. They are
+   * only 5% apart in dark too, so nothing is lost. */
+  --color-zinc-50: #09090B;
+  --color-zinc-100: #09090C;
+  --color-zinc-200: #1B1B1E;
+  --color-zinc-300: #27272B;
+  --color-zinc-400: #4D4D57;
+  --color-zinc-500: #75757F;
+  --color-zinc-600: #9898A2;
+  --color-zinc-700: #B2B2BA;
+  --color-zinc-800: #D4D4D8;
+  --color-zinc-900: #E4E4E7;
+  --color-zinc-950: #F4F4F5;
+
+  /* ── Canvas & surfaces ───────────────────────────────────────────────── */
+  --color-canvas: #F4F4F5;
+  --color-panel: rgb(255 255 255 / 0.72);
+  --color-chrome: rgb(250 250 250 / 0.8);
+  --color-surface-content: #FFFFFF;
+  --color-surface-raised: #FFFFFF;
+  --color-surface-sheet: #FFFFFF;
+  --color-scrim: rgb(9 9 11 / 0.28);
+
+  --color-hairline-soft: rgb(9 9 11 / 0.06);
+  --color-hairline: rgb(9 9 11 / 0.10);
+  --color-hairline-strong: rgb(9 9 11 / 0.16);
+  /* Inverts completely: in dark this is a white top-edge highlight on a dark
+     panel; in light it is a near-white edge on an already-light panel. */
+  --color-inset-highlight: rgb(255 255 255 / 0.9);
+
+  --color-fill-subtle: rgb(9 9 11 / 0.03);
+  --color-fill: rgb(9 9 11 / 0.05);
+  --color-fill-raised: rgb(9 9 11 / 0.07);
+  /* Same +0.03 step the dark theme takes from -raised to -hover. Without this
+     override a hover would try to lighten a light ground and vanish. */
+  --color-fill-hover: rgb(9 9 11 / 0.10);
+  --color-scrollbar: rgb(9 9 11 / 0.18);
+  --color-scrollbar-hover: rgb(9 9 11 / 0.30);
+  /* A well is "recessed", which on a light ground means slightly darker than
+     white — not a dark block. */
+  --color-well: rgb(9 9 11 / 0.04);
+
+  --color-row-hover: rgb(9 9 11 / 0.035);
+  --color-row-selected: rgb(79 70 229 / 0.07); /* see note 3 in the header */
+  --color-row-selected-blur: rgb(9 9 11 / 0.045);
+
+  /* ── Brand · indigo ──────────────────────────────────────────────────── */
+  /* indigo-600. ratify-tokens.css already called this "the mark on light". */
+  --color-brand: #4F46E5;         /* 5.72:1 */
+  --color-brand-hover: #4338CA;   /* 7.19:1 */
+  --color-brand-fill: #4F46E5;
+  --color-brand-pressed: #4338CA;
+  --color-brand-wash: #EEF2FF;    /* indigo-50 */
+
+  /* ── Review semantics ────────────────────────────────────────────────── */
+  /* --color-approve and --color-approve-fg are ABSENT ON PURPOSE. The approve
+     button keeps its mint fill in light mode, which is what keeps "approve is
+     the only solid mint surface in the app" literally true. Mint as a
+     foreground is --color-approve-text, and that does change. */
+  --color-approve-text: #047857; /* emerald-700, 4.99:1 */
+  --color-approve-dim: #065F46;  /* emerald-800, 6.99:1 */
+  --color-changes: #B45309;      /* amber-700,   4.57:1 */
+  --color-changes-dim: #92400E;  /* amber-800,   6.45:1 */
+  --color-danger: #B91C1C;       /* red-700,     5.89:1 */
+  --color-danger-dim: #991B1B;   /* red-800,     7.56:1 */
+  --color-danger-muted: #8A5049; /*              5.75:1 */
+  --color-pending: #4B4B54;      /*              7.85:1 */
+  --color-since: #0E7490;        /* cyan-700,    4.87:1 */
+  /* The since chip is a fill. In dark the fill is bright cyan and its text is
+     near-black; in light the fill is dark cyan and its text must be near-white.
+     This token inverts, --color-since does not invert around it. */
+  --color-since-fg: #ECFEFF;
+
+  /* Washes carry MORE alpha here. The light accents are dark, and a dark hue
+     at 0.10 over #F4F4F5 is a smudge rather than a tint — where the dark theme
+     could rely on a bright hue reading at low alpha, this one cannot. */
+  --color-approve-wash: rgb(4 120 87 / 0.10);
+  --color-approve-border: rgb(4 120 87 / 0.30);
+  --color-changes-wash: rgb(180 83 9 / 0.10);
+  --color-changes-border: rgb(180 83 9 / 0.30);
+  --color-danger-wash: rgb(185 28 28 / 0.09);
+  --color-danger-border: rgb(185 28 28 / 0.28);
+  --color-brand-tint: rgb(79 70 229 / 0.10);
+  --color-brand-border: rgb(79 70 229 / 0.30);
+
+  /* Bars use the mid hue, not the dark text hue: at 0.55 a near-black green
+     is just black. Same reasoning as the diff tints. */
+  --color-approve-bar: rgb(5 150 105 / 0.65);
+  --color-danger-bar: rgb(192 54 43 / 0.65);
+  --color-approve-row: rgb(5 150 105 / 0.13);
+
+  --color-row-stripe: rgb(9 9 11 / 0.02);
+  --color-shadow-strong: rgb(9 9 11 / 0.18);
+
+  /* Indigo-600 is darker, so these need LESS alpha, not more — the opposite of
+     the wash rule, because a ring is a line rather than a field. */
+  --color-brand-focus: rgb(79 70 229 / 0.60);
+  --color-brand-underline: rgb(79 70 229 / 0.35);
+  --color-focus-ring: rgb(79 70 229 / 0.70);
+  --color-focus-halo: rgb(79 70 229 / 0.14);
+
+  /* ── Diff ────────────────────────────────────────────────────────────────
+   * Tints use a LIGHTER hue than the matching text tokens, deliberately. A
+   * near-black accent at 9-10% alpha composites to a muddy grey and stops
+   * reading as a colour at all; the mid hue survives the alpha. Foreground
+   * tokens are chosen for contrast, background tints for hue survival — the
+   * same split the dark theme already makes, where the tints are full-strength
+   * #34D399 but --color-diff-add-count is the much darker #4E8F73. */
+  --color-diff-add-bg: rgb(5 150 105 / 0.10);
+  --color-diff-add-gutter: rgb(5 150 105 / 0.24);
+  --color-diff-add-num: rgb(5 150 105 / 0.13);
+  --color-diff-add-count: #0F7A5A;
+  --color-diff-del-bg: rgb(192 54 43 / 0.09);
+  --color-diff-del-gutter: rgb(192 54 43 / 0.22);
+  --color-diff-del-num: rgb(192 54 43 / 0.12);
+  --color-diff-del-count: #A3453A;
+  --color-diff-hunk: rgb(9 9 11 / 0.045);
+  --color-diff-line-selected: rgb(79 70 229 / 0.06);
+
+  /* ── Code tokens ─────────────────────────────────────────────────────────
+   * Measured against #FFFFFF, not the canvas: the diff paints on content. */
+  --color-code-keyword: #6D45C4; /* 6.37:1 */
+  --color-code-fn: #1F5FA8;      /* 6.44:1 */
+  --color-code-string: #8A5A12;  /* 5.91:1 */
+  --color-code-ident: #27272A;   /* 14.89:1 */
+  --color-code-punct: #6B6B74;   /* 5.28:1 */
+  --color-code-comment: #6E7480; /* 4.69:1 */
+}
+
+/* The canvas wash. Same two radial gradients, re-aimed: an indigo tint and a
+   white lift become an indigo tint and a white lift that read on a grey
+   ground. The only gradients in the app live on chrome and overlays. */
+:root[data-theme="light"] body {
+  background-color: var(--color-canvas);
+  background-image:
+    radial-gradient(680px 420px at 6% -8%, rgb(99 102 241 / 0.10), transparent 70%),
+    radial-gradient(560px 360px at 96% -6%, rgb(255 255 255 / 0.9), transparent 70%);
+  color: var(--color-zinc-300);
+}
+
+/* A dark theme's 0.75-alpha black drop shadow is a hole punched in a light
+   page. Sheets get a softer, tighter shadow and lean on their hairline. */
+:root[data-theme="light"] .sheet {
+  box-shadow: 0 24px 60px -16px rgb(9 9 11 / 0.22);
+}
+
+/* Selection follows the brand in both themes, but indigo-500 at 0.3 over white
+   washes out the text underneath. */
+:root[data-theme="light"] ::selection {
+  background: rgb(99 102 241 / 0.18);
+}

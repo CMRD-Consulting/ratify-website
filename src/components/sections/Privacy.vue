@@ -46,19 +46,19 @@ const claims = [
     </div>
 
     <ul
-      class="mt-12 grid gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-2"
+      class="mt-12 grid gap-px overflow-hidden rounded-xl border border-hairline bg-hairline sm:grid-cols-2"
     >
       <li
         v-for="(c, i) in claims"
         :key="c.title"
-        class="bg-[#0B0B0E] p-6"
+        class="bg-cell p-6"
         v-reveal="Math.min(i, 4) * 45"
       >
         <h3 class="h3">{{ c.title }}</h3>
         <p class="prose-body mt-2 !text-[13px]">{{ c.body }}</p>
       </li>
 
-      <li class="bg-[#0B0B0E] p-6">
+      <li class="bg-cell p-6">
         <h3 class="h3">Written down, not just claimed</h3>
         <p class="prose-body mt-2 !text-[13px]">
           These are properties of how the app is built rather than promises

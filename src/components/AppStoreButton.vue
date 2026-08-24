@@ -8,9 +8,10 @@ import { APP_STORE_URL, RELEASED } from "../site.js";
  * Indigo, not mint. Mint is a verdict in this system and this is chrome — the
  * same rule that keeps approve the only solid-mint surface in the app.
  *
- * Apple's own black badge would vanish on a #09090B canvas, so this is the
- * badge redrawn in Nocturne. Swap it for the official artwork at release if
- * App Store marketing guidelines call for it.
+ * Apple's own black badge would vanish on the Nocturne canvas, so this is the
+ * badge redrawn in the app's palette — which means it themes with the rest of
+ * the page rather than needing a second asset. Swap it for the official
+ * artwork at release if App Store marketing guidelines call for it.
  */
 defineProps({
   /** "primary" is the filled indigo button; "quiet" is the neutral one. */
@@ -35,10 +36,16 @@ defineProps({
         >Mac App Store</span
       >
     </span>
-    <!-- Honest while the link is a placeholder; one flag flips it off. -->
+    <!-- Honest while the link is a placeholder; one flag flips it off.
+
+         The border is white/25 only on the filled variant, where it sits on
+         indigo — a fill that is identical in both themes, so a white edge is
+         correct in both. On the quiet variant it sits on the canvas instead
+         and has to be a hairline, or it disappears in light. -->
     <span
       v-if="!RELEASED"
-      class="ml-1 rounded-full border border-white/25 px-1.5 py-px font-mono text-[9px] uppercase tracking-[0.09em] opacity-80"
+      class="ml-1 rounded-full border px-1.5 py-px font-mono text-[9px] uppercase tracking-[0.09em] opacity-80"
+      :class="variant === 'primary' ? 'border-white/25' : 'border-hairline-strong'"
       >Soon</span
     >
   </a>

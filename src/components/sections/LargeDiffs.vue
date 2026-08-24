@@ -34,10 +34,10 @@ const sunk = ["lockfiles", "generated code", "snapshots", "formatting churn"];
     </div>
 
     <dl
-      class="mt-10 grid gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06] sm:grid-cols-3"
+      class="mt-10 grid gap-px overflow-hidden rounded-xl border border-hairline bg-hairline sm:grid-cols-3"
       v-reveal
     >
-      <div v-for="s in stats" :key="s.label" class="bg-[#0B0B0E] px-6 py-7">
+      <div v-for="s in stats" :key="s.label" class="bg-cell px-6 py-7">
         <dt class="eyebrow">{{ s.label }}</dt>
         <dd
           class="mt-2 font-mono text-[2rem] leading-none tracking-tight text-zinc-100"
@@ -63,7 +63,7 @@ const sunk = ["lockfiles", "generated code", "snapshots", "formatting churn"];
           <li
             v-for="item in risen"
             :key="item"
-            class="rounded-md border border-[color:rgb(245_177_61_/_0.26)] bg-[rgb(245_177_61_/_0.08)] px-2 py-1 font-mono text-[11px] text-[color:var(--color-changes)]"
+            class="rounded-md border border-changes-border bg-changes-wash px-2 py-1 font-mono text-[11px] text-[color:var(--color-changes)]"
           >
             {{ item }}
           </li>
@@ -75,7 +75,7 @@ const sunk = ["lockfiles", "generated code", "snapshots", "formatting churn"];
           <li
             v-for="item in sunk"
             :key="item"
-            class="rounded-md border border-white/[0.07] bg-white/[0.03] px-2 py-1 font-mono text-[11px] text-zinc-500"
+            class="rounded-md border border-hairline bg-fill-subtle px-2 py-1 font-mono text-[11px] text-zinc-500"
           >
             {{ item }}
           </li>

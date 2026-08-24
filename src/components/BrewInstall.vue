@@ -61,7 +61,7 @@ onUnmounted(() => clearTimeout(timer));
     type="button"
     :aria-label="`Copy the install command: ${BREW_COMMAND}`"
     class="panel group flex w-full min-w-0 max-w-full cursor-pointer flex-col gap-1.5
-           rounded-[10px] p-1.5 text-left transition-colors hover:border-white/[0.18]
+           rounded-[10px] p-1.5 text-left transition-colors hover:border-hairline-strong
            sm:w-auto sm:flex-row sm:items-center sm:gap-3 sm:py-1.5 sm:pl-4 sm:pr-1.5"
     @click="copy"
   >

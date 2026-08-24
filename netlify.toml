@@ -27,10 +27,15 @@
     #
     # style-src needs 'unsafe-inline' because Vue writes real style attributes:
     # the mark is sized by height (Wordmark), the top bar reads a layout token
-    # (SiteHeader), the CTA carries its own radial, and v-reveal sets a
-    # transition-delay per element. There is no user input anywhere on this
-    # page, so inline styles are not an injection surface here — but if that
-    # ever changes, move those four to classes and drop this back.
+    # (SiteHeader), and v-reveal sets a transition-delay per element. There is
+    # no user input anywhere on this page, so inline styles are not an
+    # injection surface here — but if that ever changes, move those three to
+    # classes and drop this back.
+    #
+    # script-src stays 'self' with no hash: the theme is painted before first
+    # paint by /theme-boot.js, which is a real file rather than an inline
+    # <script>, precisely so this line never has to carry a digest that some
+    # future edit silently invalidates.
     Content-Security-Policy = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
 
 # Vite fingerprints everything under /assets, so it can be cached forever.

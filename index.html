@@ -11,8 +11,20 @@
       content="A keyboard-driven macOS review inbox for people who review a lot of code. The queue is always loaded, the top pull request is already selected, and every review action is one keystroke."
     />
     <link rel="canonical" href="https://ratify.cmrd.dev/" />
+    <!-- Both palettes, so the browser does not paint a white gutter under a
+         dark page (or the reverse) while the stylesheet is still in flight.
+         theme-color is then kept in step with the switcher by src/theme.js,
+         which reads the canvas back out of the stylesheet rather than
+         restating it. -->
     <meta name="theme-color" content="#09090B" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
+
+    <!-- Render-blocking on purpose, and classic rather than a module for the
+         same reason: modules are deferred, and a deferred theme is a theme
+         someone watches arrive. It is served from public/ so `script-src
+         'self'` already covers it — no inline hash to keep in step with the
+         CSP. See the file's own header. -->
+    <script src="/theme-boot.js"></script>
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Ratify" />

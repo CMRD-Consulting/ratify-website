@@ -24,12 +24,15 @@ export const RELEASES_URL =
 
 /**
  * False until the DMG is signed with a Developer ID and notarized. While it is
- * false the page says so and shows the quarantine command, because the
- * alternative is someone downloading an app macOS then refuses to open with no
- * explanation the page prepared them for.
+ * false the page carries the first-launch note — the quarantine command, and
+ * the System Settings → Privacy & Security steps for anyone who has already
+ * been blocked — because the alternative is someone downloading an app macOS
+ * then refuses to open, with no explanation the page prepared them for.
  *
- * Flipping this to true removes that note. Flip it only after `spctl -a -vv`
- * accepts the shipped bundle — not when the certificate arrives.
+ * Flipping this to true removes that note AND the hero's link to it. Flip it
+ * only after `spctl -a -vv` accepts the shipped bundle — not when the
+ * certificate arrives. Today it says `rejected`, with an `origin=Ratify Dev`
+ * line: signed, but by nobody Apple has vouched for.
  */
 export const NOTARIZED = false;
 

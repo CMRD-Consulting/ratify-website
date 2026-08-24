@@ -205,12 +205,38 @@ Two flags gate what the page promises, and each is false for its own reason:
 
 | | | |
 |---|---|---|
-| `NOTARIZED` | `false` | The DMG has no Developer ID signature yet, so macOS quarantines it. While this is false the page shows the `xattr` command under the install buttons. **Flip it only after `spctl -a -vv` accepts a shipped bundle** — not when the certificate arrives. |
+| `NOTARIZED` | `false` | Homebrew quarantines what it downloads, and the bundle is signed by nobody Apple has vouched for, so macOS refuses the first launch. While this is false the page carries the first-launch note under the install buttons — and the hero links to it, because that is where most people copy the command from. **Flip it only after `spctl -a -vv` accepts a shipped bundle** — not when the certificate arrives. |
 | `RELEASED` | `false` | The Mac App Store link is a placeholder id, which is what puts the "soon" chip on that button. **Change it and `APP_STORE_URL` together** — the chip is the only thing telling visitors the link does not work. |
 
 The App Store is a second channel and further off than it looks: the App
 Sandbox forbids the subprocess Ratify uses to read your `gh` CLI token, so that
 convenience has to survive the move before the listing can exist.
+
+### The first launch, and why the note says what it says
+
+Ratify **is** signed — just not by anyone Apple recognises. That one fact
+decides the whole note, so check it rather than reasoning about it:
+
+```bash
+codesign -dv --verbose=2 /Applications/Ratify.app   # Authority set, TeamIdentifier=not set
+spctl -a -vvv -t exec    /Applications/Ratify.app   # rejected, with an origin= line
+```
+
+An app whose signature is *missing or broken* is "damaged", and Privacy &
+Security offers nothing for it — the `xattr` command is the only way through.
+An app signed by someone Apple has not vouched for is merely *blocked*, and
+that is the case **Open Anyway** exists for. `rejected` **with** an `origin=`
+line is the second one, which is where Ratify sits today. The note
+[documents both routes](src/components/QuarantineNote.vue) on that basis; if
+the signing setup changes, re-run the two commands above before rewording it.
+
+Two details in that copy are load-bearing, and both come from macOS 15:
+
+- **Open Anyway does not exist until a launch has been blocked.** Someone sent
+  straight to System Settings finds an empty Security section and concludes the
+  page is wrong, so step 1 is "let it be blocked".
+- **The old right-click → Open shortcut is gone.** Privacy & Security is now the
+  only route that does not involve a terminal.
 
 `RELEASES_URL` points at `/releases/latest` rather than a pinned tag on purpose
 — otherwise the site needs a deploy on every release just to stay honest, and

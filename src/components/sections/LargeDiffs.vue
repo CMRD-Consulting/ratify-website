@@ -102,9 +102,11 @@ const sunk = ["lockfiles", "generated code", "snapshots", "formatting churn"];
         <p class="prose-body mt-3">
           Above 1560px each side still holds a readable column, so it switches
           without being asked. <Kbd size="md">⇧S</Kbd> overrides it either way.
-          <Kbd size="md">n</Kbd> steps to the next file,
-          <Kbd size="md">v</Kbd> marks it viewed, and the viewed state syncs
-          back to GitHub so a re-review resumes rather than restarts.
+          <Kbd size="md">n</Kbd> steps to the next file;
+          <Kbd size="md">v</Kbd> marks the current one viewed and moves to the
+          next one that is not, so a clean pass never needs a second keystroke.
+          Viewed state syncs back to GitHub, so a re-review resumes rather than
+          restarts.
         </p>
       </div>
       <div v-reveal="90">

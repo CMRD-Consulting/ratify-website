@@ -3,7 +3,7 @@ import Section from "../Section.vue";
 import Shot from "../Shot.vue";
 import FastPath from "../FastPath.vue";
 import BrewInstall from "../BrewInstall.vue";
-import { REQUIREMENTS } from "../../site.js";
+import { NOTARIZED, REQUIREMENTS } from "../../site.js";
 </script>
 
 <template>
@@ -35,9 +35,18 @@ import { REQUIREMENTS } from "../../site.js";
           >
         </div>
 
+        <!-- Most people copy the command from here and never reach #get,
+             which is where the first-launch note lives. While Ratify is
+             un-notarized that note is not a footnote — macOS refuses the
+             first launch outright — so the hero points at it directly. It
+             disappears with the note it points to. -->
         <p class="mt-4 font-mono text-[11px] text-zinc-600">
           {{ REQUIREMENTS }} ·
           <a href="#get" class="link">other ways to install</a>
+          <template v-if="!NOTARIZED">
+            ·
+            <a href="#first-launch" class="link">opening it the first time</a>
+          </template>
         </p>
       </div>
 

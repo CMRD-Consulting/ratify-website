@@ -12,6 +12,40 @@
  */
 export const BREW_COMMAND = "brew install cmrd-consulting/tap/ratify";
 
+/**
+ * The upgrade line, fully qualified for the same reason the install line is.
+ *
+ * `ratify` is NOT ours alone: homebrew-core ships a formula by that name — the
+ * CNCF Artifact Ratification Framework, ratify.dev — and a bare `brew upgrade
+ * ratify` resolves to that one, not this one. Homebrew says so itself when you
+ * try, and names this exact string as the fix:
+ *
+ *   Warning: Treating ratify as a formula. For the cask, use
+ *   cmrd-consulting/tap/ratify or specify the `--cask` flag.
+ *
+ * `brew upgrade --cask ratify` is the other half of that warning and works
+ * equally well. This form wins anyway: it is character-for-character the spec
+ * from BREW_COMMAND, so the page teaches one name instead of a name plus a
+ * flag someone has to remember is load-bearing. Drop `--cask` and you upgrade
+ * a stranger's software; drop nothing here, because there is nothing to drop.
+ *
+ * Named rather than bare `brew upgrade`, which would sweep up every other cask
+ * on the machine. Someone who came here to update one app should get one app.
+ */
+export const BREW_UPGRADE_COMMAND = "brew upgrade cmrd-consulting/tap/ratify";
+
+/**
+ * How to see what you are actually running, for anyone who wants to know
+ * whether the upgrade above has anything to do. Homebrew prints the version it
+ * has installed alongside the one the tap is offering, which answers "am I on
+ * the latest?" without the page having to hardcode a version number it would
+ * then be wrong about for the whole gap between releases.
+ *
+ * Qualified for the collision above — `brew info ratify` describes the CNCF
+ * project, right down to a version number that looks plausible and is not ours.
+ */
+export const BREW_VERSION_COMMAND = "brew info cmrd-consulting/tap/ratify";
+
 export const TAP_URL = "https://github.com/CMRD-Consulting/homebrew-tap";
 
 /**

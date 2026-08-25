@@ -3,6 +3,7 @@ import Section from "../Section.vue";
 import BrewInstall from "../BrewInstall.vue";
 import AppStoreButton from "../AppStoreButton.vue";
 import QuarantineNote from "../QuarantineNote.vue";
+import UpdateNote from "../UpdateNote.vue";
 import Kbd from "../Kbd.vue";
 import { RELEASES_URL, TAP_URL, REQUIREMENTS } from "../../site.js";
 </script>
@@ -39,10 +40,7 @@ import { RELEASES_URL, TAP_URL, REQUIREMENTS } from "../../site.js";
         <a :href="TAP_URL" target="_blank" rel="noreferrer" class="link"
           >cmrd-consulting tap</a
         >
-        on first install. After that,
-        <code class="font-mono text-[11px] text-[var(--color-zinc-300)]"
-          >brew upgrade --cask ratify</code
-        >
+        on first install.
       </p>
 
       <!-- items-stretch, not items-center: the App Store badge is two lines of
@@ -61,6 +59,11 @@ import { RELEASES_URL, TAP_URL, REQUIREMENTS } from "../../site.js";
       </div>
 
       <QuarantineNote />
+
+      <!-- After the first-launch note, not before it: that one describes a
+           block that arrives a minute after the install command, this one
+           describes a command nobody needs until there is a second release. -->
+      <UpdateNote />
 
       <p class="mt-6 font-mono text-[11px] text-zinc-600">
         {{ REQUIREMENTS }}

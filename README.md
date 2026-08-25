@@ -238,6 +238,47 @@ Two details in that copy are load-bearing, and both come from macOS 15:
 - **The old right-click → Open shortcut is gone.** Privacy & Security is now the
   only route that does not involve a terminal.
 
+### Updating, and why it can be blocked twice
+
+Homebrew installed it, so Homebrew updates it:
+
+```bash
+brew upgrade cmrd-consulting/tap/ratify   # the update itself
+brew info    cmrd-consulting/tap/ratify   # installed version, next to the tap's
+```
+
+**Fully qualified, and not by habit — `ratify` is not ours alone.**
+homebrew-core ships a formula of that name, the CNCF [Artifact Ratification
+Framework](https://ratify.dev), so the short name resolves to someone else's
+software:
+
+```console
+$ brew upgrade ratify
+Warning: Treating ratify as a formula. For the cask, use
+cmrd-consulting/tap/ratify or specify the `--cask` flag.
+Error: ratify not installed
+```
+
+`brew upgrade --cask ratify` is the other half of that warning and works just as
+well. The qualified form is preferred here because it is character-for-character
+the spec in `BREW_COMMAND` — the page then teaches **one** string rather than a
+string plus a flag whose absence silently retargets the command. Verify with
+`brew info cmrd-consulting/tap/ratify`, which should name Ratify and
+`ratify.cmrd.dev`; if it says "Artifact Ratification Framework" you are reading
+the wrong project.
+
+The cask is named rather than left off, so someone who came to update one app
+does not upgrade every cask on the machine.
+
+The consequence worth documenting is the second block. An upgrade is a fresh
+download, so the replacement bundle arrives with a fresh quarantine flag and
+none of the approval macOS recorded for the copy it replaced. The first-launch
+note ends on "it opens normally forever after", which is true of that bundle and
+not of its successor — [`UpdateNote.vue`](src/components/UpdateNote.vue) is what
+keeps the pair honest, and its warning is gated on `NOTARIZED` so it retires
+with the block it describes. The two commands above are not gated; they outlive
+Apple's opinion of the signature.
+
 `RELEASES_URL` points at `/releases/latest` rather than a pinned tag on purpose
 — otherwise the site needs a deploy on every release just to stay honest, and
 the build shipped in between quietly points at an old DMG. **Cutting a release

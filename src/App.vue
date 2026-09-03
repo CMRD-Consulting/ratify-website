@@ -7,6 +7,7 @@ import Features from "./components/sections/Features.vue";
 import Inbox from "./components/sections/Inbox.vue";
 import LargeDiffs from "./components/sections/LargeDiffs.vue";
 import Reviewing from "./components/sections/Reviewing.vue";
+import Agents from "./components/sections/Agents.vue";
 import Keyboard from "./components/sections/Keyboard.vue";
 import Configure from "./components/sections/Configure.vue";
 import WhoItsFor from "./components/sections/WhoItsFor.vue";
@@ -31,6 +32,7 @@ import Cta from "./components/sections/Cta.vue";
     <Inbox />
     <LargeDiffs />
     <Reviewing />
+    <Agents />
     <Keyboard />
     <Configure />
     <WhoItsFor />

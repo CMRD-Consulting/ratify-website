@@ -15,7 +15,9 @@ import Kbd from "../Kbd.vue";
         approve-anyway — scoped to the pull request you are looking at.
         <Kbd size="md">?</Kbd> shows the full keymap. And the bottom rail shows
         only the keys that are valid right now, so it is context rather than a
-        cheat sheet.
+        cheat sheet: on a proposed comment it reads
+        <Kbd size="md">⏎</Kbd> accept · <Kbd size="md">x</Kbd> discard ·
+        <Kbd size="md">e</Kbd> edit, and nowhere else.
       </p>
     </div>
 

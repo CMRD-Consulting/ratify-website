@@ -339,7 +339,13 @@ export function discoverIdentities(real, harnessSource = "") {
   // The harness holds its own constants in source, not in the fixture.
   for (const m of harnessSource.matchAll(/login:\s*"([^"]+)"/g)) logins.add(m[1]);
   for (const m of harnessSource.matchAll(/name:\s*"([^"]+)"/g)) names.add(m[1]);
-  for (const m of harnessSource.matchAll(/"([\w.-]+\/[\w.-]+)"/g)) repos.add(m[1]);
+  // A quoted `a/b` is a repository only when `a` is a login we already know:
+  // an owner is a login, and every login is gathered above. The harness also
+  // holds branch refs — "release/2.4", "test/…" — and read as owner/repo
+  // those make "test" an identity, which then matches the word everywhere.
+  for (const m of harnessSource.matchAll(/"([\w.-]+)\/([\w.-]+)"/g)) {
+    if (logins.has(m[1])) repos.add(`${m[1]}/${m[2]}`);
+  }
 
   // Owners implied by any discovered repo are identities too.
   for (const r of [...repos]) logins.add(r.split("/")[0]);

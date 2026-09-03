@@ -17,7 +17,9 @@ import Shot from "../Shot.vue";
         </p>
 
         <p class="prose-body mt-4">
-          Sections, snippets, key bindings and appearance live alongside them.
+          Sections, snippets, key bindings and appearance live alongside them,
+          and so do Providers, Lenses and Agent rules — the models you added,
+          what each agent looks for, and how far a pull request lets them go.
           Every control commits on change; there is no save button. Rebinding is
           the one exception, because a conflict has to be resolved before it can
           be saved.

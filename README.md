@@ -116,7 +116,13 @@ a public repository or on a marketing page.
 ```bash
 npm run shoot     # drive the app in both palettes, 2x PNGs into public/shots/src/
 npm run shots     # re-encode those into the WebP the site ships
+SHOTS_ONLY=agents npm run shoot   # one scene (comma-separated for more)
 ```
+
+`shots` re-encodes whatever `shoot` left in `public/shots/src/`, so a partial
+run refreshes only the scenes it captured and leaves every other shipped file
+byte-for-byte as it was. Re-shoot everything when the app's chrome changes;
+re-shoot one scene when only that scene does.
 
 **Every screen is captured twice**, because a Nocturne screenshot on a Slate
 page is the one thing that gives a themed page away. The two live at the same
@@ -151,6 +157,14 @@ module, so [`scripts/shoot.mjs`](scripts/shoot.mjs) intercepts that request and
 serves fiction instead, rewriting the harness's own constants in flight. Run
 the app dirty, on a branch, mid-rebase — it does not matter, and there is
 nothing to clean up afterwards.
+
+The `agents` scene goes one step further in the same direction. The harness
+answers every lens with a placeholder finding, which is right for a dev loop
+and wrong to photograph, so the scene's `mockPatch` has it answer each lens
+about the demo migration instead — fiction about fictional code, like every
+other word on these screenshots. A provider, the lenses' models and a `draft`
+rule are seeded through the app's own settings store on the page; the parser,
+the anchoring, the brief and the cards are the app's, untouched.
 
 Two guards make the sanitisation something other than a promise.
 [`scripts/demo-data.mjs`](scripts/demo-data.mjs) holds a list of known-real

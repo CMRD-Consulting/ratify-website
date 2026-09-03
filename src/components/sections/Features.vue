@@ -79,8 +79,20 @@ const features = [
   },
   {
     title: "The token stays in the Keychain",
-    body: "The Rust side owns your GitHub token and exposes two generic proxies. It never reaches the webview, so an XSS in a stranger's pull request description has no credential to steal.",
+    body: "The Rust side owns your GitHub token and any provider key, and exposes proxies rather than credentials. Neither reaches the webview, so an XSS in a stranger's pull request description has nothing to steal.",
     glyph: '<path d="M5 11h14v10H5z"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  },
+  {
+    title: "Bring your own model",
+    body: "Any Anthropic or OpenAI-compatible endpoint — Anthropic, OpenRouter, Groq, Together, a local Ollama — with your key, kept in the Keychain beside your GitHub token. Nothing runs until you add one.",
+    glyph:
+      '<path d="M9 3v5M15 3v5"/><path d="M6 8h12v2a6 6 0 0 1-12 0z"/><path d="M12 16v5"/>',
+  },
+  {
+    title: "Agents that propose, you decide",
+    body: "Lenses read the pull request and their findings land as proposed comments in your pending review — ⏎ accepts, x discards, e rewrites. A review carries only what you accepted.",
+    glyph:
+      '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="m8 10.5 2 2 3.5-3.5"/>',
   },
 ];
 </script>
@@ -123,18 +135,17 @@ const features = [
         <p class="prose-body mt-2 !text-[13px]">{{ f.body }}</p>
       </li>
 
-      <!-- Thirteen features do not divide by two or three, and what is left
-           over is the container showing through — which is the hairline the
-           1px gaps are made of. On Nocturne that is white at 6% and invisible;
-           on Slate it is black at 10% and reads as a grey slab bolted to the
-           end of the grid.
+      <!-- Fifteen features do not divide by two, and what is left over is
+           the container showing through — which is the hairline the 1px gaps
+           are made of. On Nocturne that is white at 6% and invisible; on
+           Slate it is black at 10% and reads as a grey slab bolted to the end
+           of the grid.
 
            So the remainder is filled rather than the lattice re-plumbed. The
-           counts are exact and not a guess: 13 into two columns leaves one
-           slot, 13 into three leaves two, and one column leaves none — which
-           is the same thing these two breakpoints say. -->
-      <li aria-hidden="true" class="hidden bg-cell sm:block" />
-      <li aria-hidden="true" class="hidden bg-cell lg:block" />
+           count is exact and not a guess: 15 into two columns leaves one
+           slot, 15 into three leaves none, and one column leaves none — so
+           the filler shows at the two-column breakpoint and only there. -->
+      <li aria-hidden="true" class="hidden bg-cell sm:block lg:hidden" />
     </ul>
   </Section>
 </template>

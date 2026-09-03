@@ -1,5 +1,6 @@
 <script setup>
 import Section from "../Section.vue";
+import Shot from "../Shot.vue";
 import Kbd from "../Kbd.vue";
 
 /**
@@ -106,7 +107,15 @@ const levels = [
       </div>
     </div>
 
-    <p class="prose-body mt-12 max-w-2xl">
+    <div class="mt-14" v-reveal>
+      <Shot
+        src="/shots/agents.webp"
+        alt="A pull request open in Ratify after the lenses ran: the Brief sits above the first file in the manifest with two findings, a comment proposed by the Correctness lens is held under the line it cites, and the bottom rail reads accept, discard, edit."
+        caption="After the lenses run: the Brief is row zero, and a proposed comment waits under the line it cites. ⏎ accepts it, x discards it, e rewrites it."
+      />
+    </div>
+
+    <p class="prose-body mt-10 max-w-2xl">
       What leaves your machine is the pull request's description, its diffs,
       and as many file bodies as the budget holds —
       <strong class="font-semibold text-zinc-200"

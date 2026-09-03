@@ -26,6 +26,12 @@
  *
  * Requires Google Chrome (driven via playwright-core's `channel: "chrome"`, so
  * there is no browser download).
+ *
+ *   SHOTS_ONLY=agents npm run shoot   # just the named scenes, comma-separated
+ *
+ * `shots.sh` re-encodes whatever is in public/shots/src/, so a partial run
+ * refreshes only the scenes it captured and leaves every other shipped file
+ * exactly as it was.
  */
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, rmSync } from "node:fs";
@@ -54,6 +60,13 @@ const THEMES = [
 const APP = process.env.RATIFY_URL ?? "http://localhost:1420/";
 
 const VIEWPORT = { width: 1440, height: 900 };
+
+/** Scene names to capture, or every scene when unset. */
+const ONLY = (process.env.SHOTS_ONLY ?? "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+const wanted = (shot) => !ONLY.length || ONLY.includes(shot.name);
 
 const real = JSON.parse(
   readFileSync(join(repo, "src/dev/fixtures.json"), "utf8"),
@@ -137,7 +150,133 @@ const SHOTS = [
       await page.waitForTimeout(400);
     },
   },
+  {
+    name: "agents",
+    // A pull request at `draft`, after the lenses have run: the brief is row
+    // zero of the manifest and the cursor sits on a proposed comment, so the
+    // rail reads ⏎ accept · x discard · e edit.
+    //
+    // The harness answers every lens with the same placeholder finding
+    // ("Mock finding on a diff line"), which is the right thing for a dev
+    // loop and the wrong thing to photograph. The patch below has it answer
+    // each lens about the demo migration instead — fiction about fictional
+    // code, like every other word on these screenshots. The app's own
+    // parser, anchoring, brief and cards are what is captured; nothing in
+    // the app is touched.
+    mockPatch: agentsMockPatch,
+    async setup(page) {
+      // Nothing runs until a provider exists, so the app booted with the
+      // agents absent. Add one the way Settings would, point every default
+      // lens at it and route everything to `draft`; then step off the top
+      // row and back, which is an ordinary open of a pull request whose
+      // lenses can now run.
+      await page.evaluate(() => {
+        const pinia = document.querySelector("#app").__vue_app__.config
+          .globalProperties.$pinia;
+        const settings = pinia._s.get("settings");
+        const provider = {
+          id: "provider-anthropic",
+          label: "Anthropic",
+          kind: "anthropic",
+          baseUrl: "https://api.anthropic.com",
+          models: ["claude-opus-4-1"],
+          windows: { "claude-opus-4-1": 200_000 },
+          workspaceId: "",
+        };
+        settings.providers = [provider];
+        settings.lenses = settings.lenses.map((l) => ({
+          ...l,
+          model: { providerId: provider.id, modelId: "claude-opus-4-1" },
+        }));
+        settings.agentRules = settings.agentRules.map((r) => ({
+          ...r,
+          level: "draft",
+        }));
+      });
+      await press(page, "j");
+      await press(page, "k");
+      // The harness answers a lens after four seconds.
+      await page.waitForFunction(
+        () => {
+          const pinia = document.querySelector("#app").__vue_app__.config
+            .globalProperties.$pinia;
+          const pr = pinia._s.get("pullRequest").pr;
+          return pr && pinia._s.get("agent").runFor(pr)?.status === "done";
+        },
+        null,
+        { timeout: 20000 },
+      );
+      await page.waitForTimeout(400);
+      // Collapse the queue, go into the diff pane, then walk threads until
+      // the cursor is on a proposed card — real threads come first when they
+      // sit higher in risk order. The rail's finding keys show only with
+      // the diff pane focused, which is what ⏎ is for.
+      await press(page, "Tab");
+      await press(page, "Enter");
+      for (let i = 0; i < 8; i += 1) {
+        await press(page, "t");
+        const proposed = await page.evaluate(() => {
+          const pinia = document.querySelector("#app").__vue_app__.config
+            .globalProperties.$pinia;
+          return !!pinia._s.get("pullRequest").cursorThread?.pending?.proposed;
+        });
+        if (proposed) return;
+      }
+      throw new Error("agents: no proposed comment reached with t");
+    },
+  },
 ];
+
+/**
+ * Have the harness answer each lens about the demo migration. Keyed on the
+ * lens's own prompt, which the runner sends as `prompt`, so Correctness gets
+ * the anchored defect, Tests the file-level note, and Security nothing —
+ * a lens that finds nothing is part of what the brief shows. The anchored
+ * line is looked up in the intercepted fixture's patch by content, so it
+ * follows the migration if that text ever moves.
+ */
+function agentsMockPatch(source) {
+  const findings = `function mockFindings(args) {
+  const first = fixtures.files[0];
+  const added = (first?.patch ?? "").split("\\n").filter((l) => l.startsWith("+"));
+  // Wholly added, so the k-th "+" line is line k+1 on the new side.
+  const at = (needle) => {
+    const i = added.findIndex((l) => l.includes(needle));
+    return i === -1 ? null : i + 1;
+  };
+  const prompt = String(args?.prompt ?? "");
+  if (/attacker/i.test(prompt)) {
+    return JSON.stringify({
+      summary: "Nothing the shown code makes exploitable. The new table takes no user input directly; every column is written by the service layer, and the enum bounds the reason.",
+      findings: [],
+    });
+  }
+  if (/regressed/i.test(prompt)) {
+    return JSON.stringify({
+      summary: "The partial unique index on captureId is not exercised by any test in the change.",
+      findings: [
+        { path: first?.filename, line: null, severity: "nit", title: "No test covers the captureId partial index", detail: "ShipmentHold.test.js creates one hold per capture id, so a second hold with the same captureId — the case the index exists for — is never attempted." },
+      ],
+    });
+  }
+  return JSON.stringify({
+    summary: "One defect in the migration: the partial index's predicate never matches on Postgres, so the unique constraint on captureId does not hold.",
+    findings: [
+      { path: first?.filename, line: at("[Op.ne]: null"), severity: "issue", title: "Op.ne against null compiles to != NULL, which is never true", detail: "Postgres evaluates captureId != NULL as unknown, so the partial index covers no rows and a second hold with the same captureId is accepted. Use [Op.not]: null, which Sequelize renders as IS NOT NULL." },
+    ],
+  });
+}
+`;
+  const patched = source
+    .replace(/function mockFindings\(\) \{[\s\S]*?\n\}\n/, findings)
+    .replace("function mockComplete(requestId)", "function mockComplete(requestId, args)")
+    .replace("resolve(mockFindings());", "resolve(mockFindings(args));")
+    .replace("return mockComplete(args.requestId);", "return mockComplete(args.requestId, args);");
+  for (const must of ["mockFindings(args)", "mockComplete(requestId, args)", "mockComplete(args.requestId, args)"]) {
+    if (!patched.includes(must)) throw new Error(`agents: the harness no longer has the shape this patch expects (${must})`);
+  }
+  return patched;
+}
 
 /**
  * Animated shots. Each step is captured as a frame, then img2webp stitches
@@ -278,7 +417,7 @@ async function main() {
     // reliably is more fragile than just reloading. A fresh context per shot
     // is also what keeps the theme honest — the app mirrors its preference to
     // localStorage, and a reused context would carry the last one over.
-    for (const shot of SHOTS) {
+    for (const shot of SHOTS.filter(wanted)) {
       const { context, page } = await open(shot, { scheme });
       await shot.setup(page);
       await guard(page, shot.name);
@@ -287,7 +426,7 @@ async function main() {
       await context.close();
     }
 
-    for (const shot of MOTION) {
+    for (const shot of MOTION.filter(wanted)) {
       const dir = join(themeOut, shot.name);
       mkdirSync(dir, { recursive: true });
       const { context, page } = await open(shot, {
@@ -330,7 +469,8 @@ async function main() {
   }
 
   await browser.close();
-  const total = (SHOTS.length + MOTION.length) * THEMES.length;
+  const total =
+    (SHOTS.filter(wanted).length + MOTION.filter(wanted).length) * THEMES.length;
   console.log(`\nWrote ${total} captures to public/shots/src/`);
   console.log("Re-encode the stills with: npm run shots");
 }

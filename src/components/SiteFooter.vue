@@ -1,26 +1,41 @@
 <script setup>
 import Wordmark from "./Wordmark.vue";
-import { CMRD_URL, REQUIREMENTS, RELEASES_URL, TAP_URL } from "../site.js";
+import {
+  CMRD_URL,
+  REQUIREMENTS,
+  RELEASES_URL,
+  TAP_URL,
+  LEGAL_ENTITY,
+} from "../site.js";
 
 const year = new Date().getFullYear();
 
+/**
+ * Section links are written as `/#id`, not `#id`.
+ *
+ * The footer is shared with /license/ and /privacy-policy/, where a bare
+ * `#inbox` resolves against the current URL and goes nowhere. The absolute
+ * form behaves identically on the landing page — same document, so it is
+ * still a fragment jump rather than a reload — and actually works from the
+ * legal pages. Keep any link added here in the same form.
+ */
 const columns = [
   {
     title: "The app",
     links: [
-      { href: "#inbox", label: "The review inbox" },
-      { href: "#diffs", label: "Large pull requests" },
-      { href: "#reviewing", label: "Reviewing" },
-      { href: "#keys", label: "Keyboard" },
-      { href: "#settings", label: "Configuration" },
+      { href: "/#inbox", label: "The review inbox" },
+      { href: "/#diffs", label: "Large pull requests" },
+      { href: "/#reviewing", label: "Reviewing" },
+      { href: "/#keys", label: "Keyboard" },
+      { href: "/#settings", label: "Configuration" },
     ],
   },
   {
     title: "Details",
     links: [
-      { href: "#who", label: "Who it's for" },
-      { href: "#trust", label: "Security" },
-      { href: "#get", label: "Get Ratify" },
+      { href: "/#who", label: "Who it's for" },
+      { href: "/#trust", label: "Security" },
+      { href: "/#get", label: "Get Ratify" },
       { href: RELEASES_URL, label: "Releases", external: true },
       { href: TAP_URL, label: "Homebrew tap", external: true },
     ],
@@ -91,11 +106,21 @@ const columns = [
 
       <div class="rule my-10" />
 
+      <!-- The legal pair sits beside the copyright rather than in a column,
+           which is where people look for it, and keeps both link columns at
+           the length they were designed at. These are real pages at real
+           paths — see the rollupOptions in vite.config.js. -->
       <div
-        class="flex flex-col gap-2 font-mono text-[11px] text-zinc-600 sm:flex-row sm:items-center sm:justify-between"
+        class="flex flex-col gap-3 font-mono text-[11px] text-zinc-600 sm:flex-row sm:items-center sm:justify-between"
       >
-        <p>© {{ year }} CMRD Consulting LLC</p>
-        <p>ratify.cmrd.dev</p>
+        <p>© {{ year }} {{ LEGAL_ENTITY }}</p>
+        <div class="flex items-center gap-3">
+          <a href="/license/" class="nav-link">Licence</a>
+          <span aria-hidden="true" class="text-zinc-800">·</span>
+          <a href="/privacy-policy/" class="nav-link">Privacy policy</a>
+          <span aria-hidden="true" class="text-zinc-800">·</span>
+          <span>ratify.cmrd.dev</span>
+        </div>
       </div>
     </div>
   </footer>

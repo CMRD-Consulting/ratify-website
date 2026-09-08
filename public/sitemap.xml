@@ -5,4 +5,17 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+  <!-- Real files, not rewrites — see rollupOptions in vite.config.js. Low
+       priority and yearly: they should be findable and are not what anyone
+       arrives for. -->
+  <url>
+    <loc>https://ratify.cmrd.dev/license/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://ratify.cmrd.dev/privacy-policy/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>

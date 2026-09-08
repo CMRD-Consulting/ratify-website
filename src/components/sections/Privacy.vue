@@ -70,6 +70,10 @@ const claims = [
           above are the entire network surface: GitHub's two, and the
           provider you chose.
         </p>
+        <p class="prose-body mt-3 !text-[13px]">
+          The same claims, in full and dated, are in the
+          <a href="/privacy-policy/" class="link">privacy policy</a>.
+        </p>
       </li>
     </ul>
   </Section>

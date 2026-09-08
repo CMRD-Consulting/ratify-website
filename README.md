@@ -301,6 +301,70 @@ requires no change here.**
 [tap]: https://github.com/CMRD-Consulting/homebrew-tap
 [releases]: https://github.com/CMRD-Consulting/ratify-releases
 
+## The legal pages
+
+`/license/` and `/privacy-policy/` are **real files**, not rewrites — the whole
+point of having no catch-all redirect is that an invented URL 404s, and the two
+documents have to survive that rule rather than be an exception to it. Each is
+an `index.html` entry point registered in
+[`vite.config.js`](vite.config.js)'s `rollupOptions.input`, mounting a small
+Vue app that reuses the design system, the theme switcher and the footer.
+Directory-style, so the served URL has no extension and stays valid if the site
+ever moves off Netlify.
+
+**Adding a third document means four edits**, and missing one of them is silent:
+the entry point, `rollupOptions.input`, a `<link rel="canonical">` in its head,
+and an entry in [`sitemap.xml`](public/sitemap.xml). Grep for `license/` to find
+the full set.
+
+### ⚠️ Both documents are drafts
+
+Three values in [`src/site.js`](src/site.js) are placeholders — `GOVERNING_LAW`,
+`LEGAL_CONTACT`, and by implication the effective date. While any of them still
+reads `[LIKE THIS]`,
+[`DraftNotice.vue`](src/components/DraftNotice.vue) renders an amber "not yet in
+force" banner at the top of **both** pages, naming which values are missing. It
+disappears on its own when the last one is filled in; there is nothing to
+remember to remove.
+
+That banner exists because the failure mode is otherwise invisible. A licence
+naming the State of `[STATE]` and an address that bounces looks finished from
+ten feet away, and every placeholder in it is buried in grey text nobody reads.
+It is the same trick `NOTARIZED` plays on the first-launch note: a fact that is
+not true yet should be visible on the page rather than tracked in someone's
+head.
+
+**Neither document has been reviewed by a lawyer.** They are drafted to be
+accurate about what the software does — the part that takes product knowledge —
+not authoritative about what the law requires.
+
+### The clauses that are not boilerplate
+
+Most of a desktop-app EULA is interchangeable. Three clauses here are not, and
+they are the reason the document was written rather than pasted:
+
+| | |
+|---|---|
+| **Licence §6** | Ratify acts on GitHub *as you*. Every approval, merge and comment is attributed to your account and is your responsibility. |
+| **Licence §7.2** | Sending source to a model provider may be prohibited by your employer or your client's contract. Ratify cannot know that and does not check. |
+| **Licence §7.4** | An `auto` review is submitted under your name with no person present, and GitHub does not allow a review to be withdrawn. The machine-assistance line in the review body discloses; it does not transfer responsibility. |
+
+### Three places now assert the same privacy facts
+
+The landing page's `Privacy.vue`, `/privacy-policy/`, and the app's own
+`src/help/11-privacy.md` all state the settings-file contents, the three GitHub
+hosts, and what the agent transmits. **They have to agree.** Change one and
+check the other two — the policy is the one that gets read adversarially.
+
+Two disclosures in the policy are deliberately *not* flattering and must not be
+quietly dropped, because both are provable from this repo and their absence
+would make the document false:
+
+- **Netlify** processes request logs, including visitor IPs, as our host.
+- **Google Fonts** receives a visitor's IP and user agent on every page load —
+  it is the only third party a visit to this site contacts, and `netlify.toml`'s
+  own CSP is the proof.
+
 ## Deploying
 
 [`netlify.toml`](netlify.toml) carries the whole deploy: `npm run build`,

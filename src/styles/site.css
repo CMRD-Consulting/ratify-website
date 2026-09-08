@@ -457,6 +457,109 @@ a.nav-link:hover {
     background: var(--color-canvas);
   }
 
+  /* ─────────────────────────────────────────────────────────────────────
+     Legal prose — /license/ and /privacy-policy/.
+
+     A separate ramp from `.prose-body` because these documents are read
+     top to bottom rather than scanned, and they are the only place on the
+     site with real nested structure: h2 sections, ordered clauses, nested
+     lists, defined terms. Styling the elements once here is what keeps the
+     two documents' markup plain enough to actually edit — nobody wants to
+     hunt utility classes to fix a comma in a warranty clause.
+
+     Type is the app's, unchanged: sans for anything a person wrote, mono
+     for anything a machine made, tracked at the same -0.011em. */
+  .legal-prose {
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    color: var(--color-zinc-400);
+    text-wrap: pretty;
+  }
+
+  .legal-prose h2 {
+    margin-top: 2.75rem;
+    font-size: 1.0625rem;
+    line-height: 1.35;
+    font-weight: 600;
+    letter-spacing: -0.014em;
+    color: var(--color-zinc-100);
+  }
+
+  .legal-prose h3 {
+    margin-top: 1.75rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-zinc-200);
+  }
+
+  .legal-prose p,
+  .legal-prose ul,
+  .legal-prose ol {
+    margin-top: 1rem;
+  }
+
+  .legal-prose ul,
+  .legal-prose ol {
+    padding-left: 1.5rem;
+  }
+
+  .legal-prose ul {
+    list-style: disc;
+  }
+
+  .legal-prose ol {
+    list-style: decimal;
+  }
+
+  .legal-prose li {
+    margin-top: 0.5rem;
+  }
+
+  .legal-prose li::marker {
+    color: var(--color-zinc-600);
+  }
+
+  /* The one thing a legal document must not do is bury the sentence that
+     limits someone's rights in the same grey as everything else. Emphasis
+     here is a step up the ramp, not a colour. */
+  .legal-prose strong {
+    font-weight: 600;
+    color: var(--color-zinc-200);
+  }
+
+  .legal-prose code {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--color-zinc-300);
+  }
+
+  /* A boxed summary — the "short version" at the head of the policy. It is
+     not a warning, so it must not wear the amber: in this palette amber means
+     "unsent / needs attention" and spending it on a neutral abstract would
+     leave the page with two alarm-coloured boxes stacked, neither of which
+     reads as an alarm any more. Panel and hairline, like `.card`. */
+  .legal-prose .summary {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-hairline-strong);
+    border-radius: var(--radius-lg);
+    background: var(--color-panel);
+  }
+
+  /* A clause the reader has to act on — an unfilled placeholder, or the
+     all-caps disclaimer blocks the law effectively requires be conspicuous.
+     Amber is the app's "unsent / needs attention", which is exactly the
+     meaning wanted, and it is the same token the pending-comment card uses. */
+  .legal-prose .callout {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-changes-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-changes-wash);
+    font-size: 0.875rem;
+    color: var(--color-zinc-300);
+  }
+
   .rule {
     height: 1px;
     background: linear-gradient(

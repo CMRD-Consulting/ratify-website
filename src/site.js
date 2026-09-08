@@ -100,3 +100,38 @@ export const REQUIREMENTS = "macOS 11 or later · Apple silicon and Intel";
    pointing at it would 404 for every visitor. The releases repository above is
    public precisely because Homebrew cannot authenticate to a private one. */
 export const CMRD_URL = "https://cmrd.dev";
+
+/* ── The legal pages ───────────────────────────────────────────────────── */
+
+/**
+ * The two documents at /license/ and /privacy-policy/.
+ *
+ * ⚠️ THREE VALUES BELOW ARE PLACEHOLDERS AND MUST BE SET BEFORE EITHER PAGE
+ * IS TREATED AS BINDING. They are gathered here rather than written into the
+ * prose so that filling them in is one edit in one file, and so that shipping
+ * with a placeholder still in place is visible rather than buried in a wall
+ * of text — each renders as an obvious `[…]` marker on the page.
+ *
+ * Neither document has been reviewed by a lawyer. They are drafted to be
+ * accurate about what the software actually does — which is the part that
+ * takes product knowledge — not to be authoritative about what the law
+ * requires, which is the part that does not.
+ */
+export const LEGAL_ENTITY = "CMRD Consulting LLC";
+
+/** PLACEHOLDER — the US state whose law governs, and where disputes are heard. */
+export const GOVERNING_LAW = "[STATE]";
+
+/**
+ * PLACEHOLDER — must be a real, monitored mailbox before publishing. A privacy
+ * policy naming an address that bounces is worse than one naming none, and the
+ * App Store review form requires a working contact.
+ */
+export const LEGAL_CONTACT = "[legal@example.com]";
+
+/**
+ * Shown on both documents. Bump it whenever the substance changes — not for a
+ * typo fix, and not on every deploy: a date that moves without the terms
+ * moving teaches people to ignore it.
+ */
+export const LEGAL_EFFECTIVE = "7 September 2026";

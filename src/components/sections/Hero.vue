@@ -24,6 +24,18 @@ import { NOTARIZED, REQUIREMENTS } from "../../site.js";
           and every review action one keystroke away.
         </p>
 
+        <!-- The second claim, and deliberately not folded into the first: the
+             app is useful with no model at all, and the sentence that sells
+             the agent must not imply otherwise. "Point it at" is doing that
+             work — there is nothing configured out of the box. -->
+        <p class="prose-body mt-4 max-w-xl">
+          Point it at a model you own and it reads the queue before you do — a
+          brief above the file list, findings as comments you accept or
+          discard, and, where your rules allow it,
+          <a href="#agents" class="link">reviews that happen while you sleep</a
+          >.
+        </p>
+
         <!-- The install line is the hero's call to action, and it is a
              command rather than a button because that is genuinely how this
              ships. The other channels live in #get, where someone who did not

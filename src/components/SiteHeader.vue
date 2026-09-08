@@ -22,6 +22,7 @@ onUnmounted(() => window.removeEventListener("scroll", onScroll));
 const nav = [
   { href: "#inbox", label: "The inbox" },
   { href: "#diffs", label: "Large PRs" },
+  { href: "#agents", label: "Agents" },
   { href: "#keys", label: "Keyboard" },
   { href: "#who", label: "Who it's for" },
   { href: "#privacy", label: "Privacy" },
@@ -41,12 +42,20 @@ const nav = [
         <Wordmark :size="20" scale="md" />
       </a>
 
-      <nav class="ml-2 hidden items-center gap-1 md:flex" aria-label="Sections">
+      <!-- lg, not md. At 768px the six labels are squeezed into ~386px and
+           wrap mid-label — "Who it's / for" over two lines inside a 56px bar.
+           That was already happening at five and adding Agents made it worse,
+           so the breakpoint moves rather than the labels being abbreviated:
+           the bar is chrome borrowed from the app and a two-line nav inside it
+           is worse than no nav on a screen that scrolls anyway. whitespace-
+           nowrap keeps it a wrapping failure rather than a silent squeeze if a
+           seventh item is ever added. -->
+      <nav class="ml-2 hidden items-center gap-1 lg:flex" aria-label="Sections">
         <a
           v-for="item in nav"
           :key="item.href"
           :href="item.href"
-          class="nav-link rounded-md px-2.5 py-1.5 text-[13px] hover:bg-fill"
+          class="nav-link whitespace-nowrap rounded-md px-2.5 py-1.5 text-[13px] hover:bg-fill"
           >{{ item.label }}</a
         >
       </nav>

@@ -83,9 +83,17 @@ const sunk = ["lockfiles", "generated code", "snapshots", "formatting churn"];
       </div>
     </div>
 
+    <!-- This line used to end "no model, no network" full stop, which stopped
+         being the whole story when the review agent shipped. The resolution is
+         the app's own: it stays true OF THE CLASSIFIER, said more precisely.
+         Triage is the layer that works with no key, no budget and no
+         connection, and the agent riding on top of it is why that matters. -->
     <p class="prose-body mt-6 max-w-2xl">
-      The classifier is path globs only — no model, no network. It is advisory:
-      it never hides a file and never drops one from the viewed count.
+      The classifier itself is path globs only — no model, no network, nothing
+      to configure. That is the layer that always works, and it stays that way:
+      <a href="#agents" class="link">the review agent</a> reads in the order it
+      produces and never replaces it. Both are advisory — a rule never hides a
+      file, and never drops one from the viewed count.
     </p>
 
     <div class="mt-14" v-reveal>

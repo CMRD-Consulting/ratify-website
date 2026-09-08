@@ -25,6 +25,7 @@ const columns = [
     links: [
       { href: "/#inbox", label: "The review inbox" },
       { href: "/#diffs", label: "Large pull requests" },
+      { href: "/#agents", label: "Reviewing with agents" },
       { href: "/#reviewing", label: "Reviewing" },
       { href: "/#keys", label: "Keyboard" },
       { href: "/#settings", label: "Configuration" },

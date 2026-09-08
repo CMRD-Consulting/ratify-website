@@ -317,26 +317,32 @@ the entry point, `rollupOptions.input`, a `<link rel="canonical">` in its head,
 and an entry in [`sitemap.xml`](public/sitemap.xml). Grep for `license/` to find
 the full set.
 
-### ⚠️ Both documents are drafts
+### ⚠️ Both documents are drafts, and nothing says so on the page
 
 Three values in [`src/site.js`](src/site.js) are placeholders — `GOVERNING_LAW`,
-`LEGAL_CONTACT`, and by implication the effective date. While any of them still
-reads `[LIKE THIS]`,
-[`DraftNotice.vue`](src/components/DraftNotice.vue) renders an amber "not yet in
-force" banner at the top of **both** pages, naming which values are missing. It
-disappears on its own when the last one is filled in; there is nothing to
-remember to remove.
+`LEGAL_CONTACT`, and by implication the effective date. Until they are set, the
+published pages render them literally: the licence says it is governed by the
+laws of the State of `[STATE]`, and both documents link a `mailto:` to
+`[legal@example.com]`.
 
-That banner exists because the failure mode is otherwise invisible. A licence
-naming the State of `[STATE]` and an address that bounces looks finished from
-ten feet away, and every placeholder in it is buried in grey text nobody reads.
-It is the same trick `NOTARIZED` plays on the first-launch note: a fact that is
-not true yet should be visible on the page rather than tracked in someone's
-head.
+**There is no longer any warning on the page.** A `DraftNotice.vue` component
+used to render an amber "not yet in force" banner computed from those values,
+and it was removed on 2026-09-08 by request — publishing "this has not been
+reviewed by a lawyer" is a reasonable thing not to want on your own site. It is
+in git history if it is ever wanted back.
 
-**Neither document has been reviewed by a lawyer.** They are drafted to be
-accurate about what the software does — the part that takes product knowledge —
-not authoritative about what the law requires.
+The cost of that is real and worth stating plainly: **the only remaining check
+is this paragraph and the grep below.** Nothing in the build fails, nothing in
+the page complains, and the documents look finished at a glance.
+
+```bash
+grep -rn "\[STATE\]\|legal@example.com" ~/www/cmrd/apps/{ratify,ratify-releases,ratify-website}
+```
+
+Six hits across three repos while it is unfinished. **Do not treat either
+document as binding, and do not point the App Store review form at them, until
+that grep is empty and a lawyer has read the result.** Neither has been
+reviewed by one.
 
 ### The clauses that are not boilerplate
 

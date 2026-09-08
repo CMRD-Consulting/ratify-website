@@ -1,6 +1,5 @@
 <script setup>
 import LegalLayout from "../components/LegalLayout.vue";
-import DraftNotice from "../components/DraftNotice.vue";
 import { LEGAL_ENTITY, GOVERNING_LAW, LEGAL_CONTACT } from "../site.js";
 
 /**
@@ -26,8 +25,6 @@ import { LEGAL_ENTITY, GOVERNING_LAW, LEGAL_CONTACT } from "../site.js";
     title="Licence agreement"
     standfirst="The terms on which you may install and use Ratify. Plain English wherever plain English is precise enough."
   >
-    <DraftNotice />
-
     <p>
       This agreement is between you and {{ LEGAL_ENTITY }} (“we”, “us”), and it
       covers the Ratify application for macOS, including any updates we make

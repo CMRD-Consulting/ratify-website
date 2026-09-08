@@ -1,6 +1,5 @@
 <script setup>
 import LegalLayout from "../components/LegalLayout.vue";
-import DraftNotice from "../components/DraftNotice.vue";
 import { LEGAL_ENTITY, LEGAL_CONTACT } from "../site.js";
 
 /**
@@ -29,8 +28,6 @@ import { LEGAL_ENTITY, LEGAL_CONTACT } from "../site.js";
     title="Privacy policy"
     standfirst="Ratify has no server, no account system and no telemetry. This page says precisely what that means, and where the exceptions are."
   >
-    <DraftNotice />
-
     <p>
       This policy explains how {{ LEGAL_ENTITY }} handles information in
       connection with the Ratify application for macOS and this website,

@@ -24,6 +24,11 @@ import Shot from "../Shot.vue";
           the one exception, because a conflict has to be resolved before it can
           be saved.
         </p>
+
+        <p class="prose-body mt-4">
+          And when a team should agree, an org can keep one set of rules for
+          everyone — <a href="#teams" class="link">shared configs</a>.
+        </p>
       </div>
 
       <div v-reveal>

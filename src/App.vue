@@ -10,6 +10,7 @@ import Reviewing from "./components/sections/Reviewing.vue";
 import Agents from "./components/sections/Agents.vue";
 import Keyboard from "./components/sections/Keyboard.vue";
 import Configure from "./components/sections/Configure.vue";
+import Teams from "./components/sections/Teams.vue";
 import WhoItsFor from "./components/sections/WhoItsFor.vue";
 import Privacy from "./components/sections/Privacy.vue";
 import Trust from "./components/sections/Trust.vue";
@@ -35,6 +36,7 @@ import Cta from "./components/sections/Cta.vue";
     <Agents />
     <Keyboard />
     <Configure />
+    <Teams />
     <WhoItsFor />
     <Privacy />
     <Trust />

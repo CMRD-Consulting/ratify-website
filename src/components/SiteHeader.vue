@@ -24,6 +24,7 @@ const nav = [
   { href: "#diffs", label: "Large PRs" },
   { href: "#agents", label: "Agents" },
   { href: "#keys", label: "Keyboard" },
+  { href: "#teams", label: "Teams" },
   { href: "#who", label: "Who it's for" },
   { href: "#privacy", label: "Privacy" },
 ];

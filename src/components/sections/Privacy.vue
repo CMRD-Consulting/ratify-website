@@ -15,11 +15,11 @@ import Section from "../Section.vue";
 const claims = [
   {
     title: "There is no server of ours",
-    body: "Ratify talks to api.github.com, and to a model provider only if you add one. No account to create, no backend to route through, nothing sitting between you and the code you already have access to.",
+    body: "Ratify talks to api.github.com, and to a model provider only if you add one. No account to create, no backend to route through, nothing sitting between you and the code you already have access to. An org's shared rules live in that org's own GitHub repository, not with us.",
   },
   {
     title: "Nothing is stored but your settings",
-    body: "Diffs live in memory for as long as the window is open and are gone when you quit. The only file Ratify writes is settings.json — your sections, rules, snippets, key bindings, the lenses you named and a ledger of what the agents ran and spent. No code, no diffs, no findings.",
+    body: "Diffs live in memory for as long as the window is open and are gone when you quit. The only file Ratify writes is settings.json — your sections, rules, snippets, key bindings, the lenses you named, the rules of any org you review in as last read from its repository, and a ledger of what the agents ran and spent. No code, no diffs, no findings.",
   },
   {
     title: "No telemetry, at all",
